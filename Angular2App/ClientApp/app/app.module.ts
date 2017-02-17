@@ -31,8 +31,8 @@ import { WeatherComponent } from './components/weather/weather.component';
             { path: 'counter', component: CounterComponent },
             { path: 'fetch-data', component: FetchDataComponent },
             { path: 'hello', component: HelloWorldComponent },
-            { path: 'weather', component: WeatherComponent },
-            { path: '**', redirectTo: 'home' }
+            { path: 'weather', component: WeatherComponent }
+            
         ])
     ]
 })
