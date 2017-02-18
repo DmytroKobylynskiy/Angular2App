@@ -4,15 +4,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Angular2App.Data
 {
-    public class DbContext : IdentityDbContext<ApplicationUser>
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
        
-        public DbContext(DbContextOptions<DbContext> options)
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
         }
-        public DbContext db { get; set; }
-        public DbSet<User1> Users {get;set;}
+        public DbSet<User1> Users1 {get;set;}
+        public ApplicationDbContext Db { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
