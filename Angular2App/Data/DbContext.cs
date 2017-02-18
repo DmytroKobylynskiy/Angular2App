@@ -12,6 +12,7 @@ namespace Angular2App.Data
         {
         }
         public DbContext db { get; set; }
+        public DbSet<User1> Users {get;set;}
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

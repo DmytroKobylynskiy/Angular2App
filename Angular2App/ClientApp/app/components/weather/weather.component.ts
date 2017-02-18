@@ -7,6 +7,7 @@ import { Http } from '@angular/http';
 })
 export class WeatherComponent {
     public weather: Weather;
+    public clients : string;
 
     constructor(private http: Http) {
     }
@@ -15,6 +16,12 @@ export class WeatherComponent {
         this.http.get('/api/weather/city/' + chosenCity).subscribe(result => {
             this.weather = result.json();
         });
+    }
+
+    public getUser(){
+        this.http.get('/api/users/clients').subscribe(result=>{
+            this.clients = result.json();
+        })
     }
 }
 
