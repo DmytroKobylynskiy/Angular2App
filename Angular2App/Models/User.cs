@@ -3,7 +3,7 @@ using System.Globalization;
 
 namespace Angular2App.Models
 {
-    public class User 
+    public class User1 
     {
         public bool CarExist { get; set; }
 

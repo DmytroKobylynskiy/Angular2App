@@ -17,5 +17,15 @@ namespace Angular2App.Controllers
         public UsersController(DbContext _db){
             db = _db;
         }
+
+        public async Task<IActionResult> Users(){
+
+            return Ok(new
+                    {
+                        Temp = db.Users.,
+                        Summary = string.Join(",", rawWeather.Weather.Select(x => x.Main)),
+                        City = rawWeather.Name
+                    });
+        }
     }
 }
