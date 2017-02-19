@@ -22,15 +22,7 @@ namespace Angular2App.Controllers
         }
         [HttpGet("[action]")]
         public async Task<IActionResult> Clients(){
-            User1 user = new User1();
-            user.CarExist=true;
-            user.DriverLicense ="133";
-            db.Add(user);
-            await db.SaveChangesAsync();
-            return Ok(new
-                    {
-                        Temp = db.Users1.ToString()
-                    });
+            return Ok(db.Clients);
         }
     }
 }

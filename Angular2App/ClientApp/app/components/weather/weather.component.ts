@@ -30,3 +30,8 @@ interface Weather {
     summary: string;
     city: string;
 }
+
+interface Client {
+    carExist: boolean;
+    driverLicense: string;
+}

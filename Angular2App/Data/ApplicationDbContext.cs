@@ -11,7 +11,7 @@ namespace Angular2App.Data
             : base(options)
         {
         }
-        public DbSet<User1> Users1 {get;set;}
+        public DbSet<Client> Clients {get;set;}
         public ApplicationDbContext Db { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {

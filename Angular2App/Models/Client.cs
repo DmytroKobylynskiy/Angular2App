@@ -3,10 +3,10 @@ using System.Globalization;
 
 namespace Angular2App.Models
 {
-    public class User1 
+    public class Client 
     {
         [Key]
-        public int UserId { get; set; }
+        public int ClientId { get; set; }
 
         public bool CarExist { get; set; }
 
