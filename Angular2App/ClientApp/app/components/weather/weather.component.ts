@@ -2,12 +2,12 @@ import { Component } from '@angular/core';
 import { Http } from '@angular/http';
 
 @Component({
-    selector: 'weather',
+    selector: 'angular2app',
     template: require('./weather.component.html')
 })
 export class WeatherComponent {
     public weather: Weather;
-    public clients : string;
+    public clients : Client;
 
     constructor(private http: Http) {
     }
@@ -23,6 +23,7 @@ export class WeatherComponent {
             this.clients = result.json();
         })
     }
+
 }
 
 interface Weather {
@@ -32,6 +33,7 @@ interface Weather {
 }
 
 interface Client {
-    carExist: boolean;
+    clientId: string;
+    carExist: string;
     driverLicense: string;
 }

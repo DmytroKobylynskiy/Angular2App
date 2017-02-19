@@ -4,10 +4,9 @@
 <input type="text" id="city" [(ngModel)]="chosenCity" />
 <input type="button" value="Get Weather" (click)="getWeather(chosenCity)" />
 <input type="button" value="Get User" (click)="getUser()" />
-<h4>{{clients}}</h4>
 <div *ngIf="weather">
     <h3>Weather for33 {{weather.city}}</h3>
-    
+    <h1></h1>
     <table class="table table-bordered table-striped">
         <thead>
             <tr>
@@ -17,9 +16,14 @@
         </thead>
         <tbody>
             <tr>
-                <td>{{weather.temp}}</td>
+                <td>{{weather.temp}} {{weather.temp}}</td>
                 <td>{{weather.summary}}</td>
+
             </tr>
         </tbody>
     </table>
+</div>
+
+<div *ngIf="clients">
+    <h3>Weather for33 {{clients.clientId}}</h3>
 </div>

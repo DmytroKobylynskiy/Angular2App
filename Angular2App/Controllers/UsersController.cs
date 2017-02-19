@@ -22,7 +22,12 @@ namespace Angular2App.Controllers
         }
         [HttpGet("[action]")]
         public async Task<IActionResult> Clients(){
-            return Ok(db.Clients);
+            List <Client> clients = db.Clients.ToList();
+            Client client = new Client();
+            client = clients[0];
+            return Ok(client);
         }
+
+
     }
 }
