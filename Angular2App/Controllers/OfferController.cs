@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Identity.Data;
-using Identity.Models;
+using Angular2App.Data;
+using Angular2App.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace Identity.Controllers
-{
+namespace Angular2App.Controllers
+{/*
     public class OfferController : Controller
     {
         private ApplicationDbContext db;
@@ -22,10 +22,6 @@ namespace Identity.Controllers
         public async Task<IActionResult> TaxiOffers()
         {
             return View(await db.TaxiOffers.ToListAsync());
-        }
-        public IActionResult CreateTaxiOffer()
-        {
-            return View();
         }
         [HttpPost]
         public async Task<IActionResult> CreateTaxiOffer(TaxiOffer taxiOffer)
@@ -144,5 +140,5 @@ namespace Identity.Controllers
             return NotFound();
         }
 
-    }
+    }*/
 }

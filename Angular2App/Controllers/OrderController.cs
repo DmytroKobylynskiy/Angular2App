@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Identity.Data;
-using Identity.Models;
+using Angular2App.Data;
+using Angular2App.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -10,22 +10,21 @@ using Microsoft.Extensions.Logging;
 
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace Identity.Controllers
+namespace Angular2App.Controllers
 {
+    [Route("api/[controller]")]
     public class OrderController : Controller
     {
 
 
         UserManager<ApplicationUser> userManager;
         private ApplicationDbContext db;
-        private readonly ILogger _logger;
         private Task<ApplicationUser> GetCurrentUserAsync() => userManager.GetUserAsync(HttpContext.User);
 
         public OrderController(ILoggerFactory loggerFactory,ApplicationDbContext context, UserManager<ApplicationUser> _userManager)
         {
             db = context;
             userManager = _userManager;
-            _logger = loggerFactory.CreateLogger<ManageController>();
         }
 
         public ActionResult Index()
@@ -67,7 +66,7 @@ namespace Identity.Controllers
 
             return Json(stations);
         }
-
+        [HttpGet("[action]")]
         public async Task<IActionResult> TaxiOrders()
         {
             List<TaxiOrder> taxiOrders = await db.TaxiOrders.ToListAsync();
@@ -112,9 +111,9 @@ namespace Identity.Controllers
                     taxi = taxi.OrderBy(s => s.StartPoint).ToList();
                     break;
             }*/
-            return View(taxiOrders);
+            return Ok(taxiOrders);
         }
-
+/*
         public async Task<IActionResult> MyOrders()
         {
             var user = await GetCurrentUserAsync();
@@ -130,7 +129,7 @@ namespace Identity.Controllers
             }
             return View(myOrders);
         }
-
+/* 
         public async Task<IActionResult> MyRequests()
         {
             var user = await GetCurrentUserAsync();
@@ -146,18 +145,15 @@ namespace Identity.Controllers
             }
             return View(myRequest);
         }
+*/
 
-        public IActionResult CreateTaxiOrder()
-        {
-            return View();
-        }
-        [HttpPost]
-        public async Task<IActionResult> CreateTaxiOrder(TaxiOrder taxiOrder)
+        [HttpPost("[action]")]
+        public async Task<IActionResult> CreateTaxiOrder([FromBody]TaxiOrder taxiOrder)
         {
 
-            var user = await GetCurrentUserAsync();
-            var userId = user?.Id;
-            taxiOrder.OrderOwnerId = userId;
+           // var user = await GetCurrentUserAsync();
+           // var userId = user?.Id;
+           // taxiOrder.OrderOwnerId = userId;
             taxiOrder.OrderStatus = "Free";
             db.TaxiOrders.Add(taxiOrder);
             await db.SaveChangesAsync();
@@ -167,8 +163,7 @@ namespace Identity.Controllers
         public async Task<IActionResult> CreateTaxiOrderToConcreateDriver(string receiverId)
         {
             TaxiOrder taxiOrder = new TaxiOrder();
-            taxiOrder.ReceiverId = receiverId;
-            _logger.LogInformation("ReceiverId"+receiverId);
+           // taxiOrder.ReceiverId = receiverId;
             //db.TaxiOrders.Add(taxiOrder);
            // await db.SaveChangesAsync();
             return View(taxiOrder);
@@ -180,7 +175,7 @@ namespace Identity.Controllers
 
             var user = await GetCurrentUserAsync();
             var userId = user?.Id;
-            taxiOrder.OrderOwnerId = userId;
+            //taxiOrder.OrderOwnerId = userId;
             taxiOrder.OrderStatus = "In Progress";
             db.TaxiOrders.Add(taxiOrder);
             await db.SaveChangesAsync();

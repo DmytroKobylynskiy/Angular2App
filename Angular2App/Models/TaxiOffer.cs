@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.DotNet.ProjectModel;
 
-namespace Identity.Models
+namespace Angular2App.Models
 {
     public class TaxiOffer
     {

@@ -3,7 +3,7 @@ using System.Collections;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace Identity.Models
+namespace Angular2App.Models
 {
     public class TaxiOrder
     {
@@ -37,9 +37,9 @@ namespace Identity.Models
         [DisplayName]
         [StringLength(60, MinimumLength = 3)]
         public string PassengerName { get; set; }
-        public string OrderOwnerId { get; set; }
+      //  public string OrderOwnerId { get; set; }
         public string OrderStatus { get; set; }
-        public string ReceiverId { get; set; }
+       // public string ReceiverId { get; set; }
         
     }
 }

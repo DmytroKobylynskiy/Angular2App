@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
-namespace Identity.Models
+namespace Angular2App.Models
 {
     public class ChangeRoleViewModel
     {

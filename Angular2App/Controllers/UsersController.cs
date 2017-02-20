@@ -25,7 +25,7 @@ namespace Angular2App.Controllers
             List <Client> clients = db.Clients.ToList();
             Client client = new Client();
             client = clients[0];
-            return Ok(client);
+            return Ok(clients);
         }
 
 

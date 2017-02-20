@@ -12,6 +12,8 @@ namespace Angular2App.Data
         {
         }
         public DbSet<Client> Clients {get;set;}
+        //public DbSet<TaxiOffer> TaxiOffers {get;set;}
+        public DbSet<TaxiOrder> TaxiOrders {get;set;}
         public ApplicationDbContext Db { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {

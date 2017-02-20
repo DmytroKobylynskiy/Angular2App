@@ -18,12 +18,19 @@
             <tr>
                 <td>{{weather.temp}} {{weather.temp}}</td>
                 <td>{{weather.summary}}</td>
-
             </tr>
         </tbody>
     </table>
 </div>
 
 <div *ngIf="clients">
-    <h3>Weather for33 {{clients.clientId}}</h3>
+    <div *ngFor="let item of clients; let i = index">{{i+1}}.{{item.driverLicense}} {{item.carExist}} 
+        <div class="btn-group">
+            <button class="btn btn-default" data-toggle="tooltip" title="Подробнее" data-placement="top"  ><span class="glyphicon glyphicon-info-sign"></span></button>
+            <button class="btn btn-default" data-toggle="tooltip" title="Изменить" data-placement="top"   ><span class="glyphicon glyphicon-pencil"></span></button>
+            <button class="btn btn-default" data-toggle="tooltip" title="Удалить" data-placement="top"   ><span class="glyphicon glyphicon-remove"></span> </button>
+            <button class="btn btn-default"  data-toggle="tooltip" title="Принять" data-placement="top"  ><span class="glyphicon glyphicon-ok"></span></button>
+            <button class="btn btn-default" data-toggle="tooltip" title="Принять" data-placement="top"   ><span class="glyphicon glyphicon-ok"></span> </button>
+        </div> 
+    </div>
 </div>

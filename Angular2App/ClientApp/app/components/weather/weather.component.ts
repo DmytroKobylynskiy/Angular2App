@@ -7,7 +7,7 @@ import { Http } from '@angular/http';
 })
 export class WeatherComponent {
     public weather: Weather;
-    public clients : Client;
+    public clients : Array<Client>;
 
     constructor(private http: Http) {
     }

@@ -1,0 +1,26 @@
+
+
+<h1>Create Taxi Order</h1>
+<form #myForm="ngForm" novalidate>
+        <div class="form-group">
+            <label>Начало</label>
+            <input class="form-control" name="startPoint" [(ngModel)]="startPoint"  />
+        </div>
+        <div class="form-group">
+            <label>Конец</label>
+            <input class="form-control" name="endPoint" [(ngModel)]="endPoint" />
+        </div>
+        <div class="form-group">
+            <label>Дата</label>
+            <input class="form-control" name="date" [(ngModel)]="date" />
+        </div>
+        <div class="form-group">
+            <label>Дата</label>
+            <input class="form-control" name="time" [(ngModel)]="time" />
+        </div>
+        <div class="form-group">
+            <button 
+                    class="btn btn-default" (click)="submit(myForm)">Добавить</button>
+        </div>
+</form>
+

@@ -1,4 +1,4 @@
-﻿namespace Identity.Models
+﻿namespace Angular2App.Models
 {
     public class RequestRole
     {

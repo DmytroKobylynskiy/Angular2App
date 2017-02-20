@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Identity.Models
+namespace Angular2App.Models
 {
     public class SortState
     {
