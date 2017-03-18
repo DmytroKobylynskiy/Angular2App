@@ -1,0 +1,24 @@
+
+<h1>Изменение прав доступа</h1>
+<form   #myForm="ngForm" novalidate>
+        <div class="form-group">
+            <label>Водительские права</label>
+            <input type="text" class="form-control" name="driverLicense" [(ngModel)]="driverLicense" />
+        </div>
+        <div class="form-group">
+            <label>Машина</label>
+            <input type="text" class="form-control" name="carType" [(ngModel)]="carType" />
+        </div>
+        
+            <input type="radio" [ngModel]="roleUser" 
+            (ngModelChange)="roleUser = 'customer'"  name="roleUser" value="customer">Заказчик<br>
+
+            <input type="radio" [ngModel]="roleUser"  
+            (ngModelChange)="roleUser = 'carrier'" name="roleUser" value="carrier">Перевозчик
+        <div>Выбрано: {{roleUser}}</div>
+        <div class="form-group">
+            <button class="btn btn-default" (click)="onSubmit(myForm)">Добавить</button>
+        </div>
+</form>
+
+

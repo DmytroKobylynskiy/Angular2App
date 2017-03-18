@@ -1,30 +1,26 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Angular2App.Data;
 using Angular2App.Models;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace Angular2App.Controllers
 {
+    [RequireHttps]
     [Route("api/[controller]")]
     public class OrderController : Controller
     {
 
-
-        UserManager<ApplicationUser> userManager;
         private ApplicationDbContext db;
-        private Task<ApplicationUser> GetCurrentUserAsync() => userManager.GetUserAsync(HttpContext.User);
 
-        public OrderController(ILoggerFactory loggerFactory,ApplicationDbContext context, UserManager<ApplicationUser> _userManager)
+        public OrderController(ILoggerFactory loggerFactory,ApplicationDbContext context)
         {
             db = context;
-            userManager = _userManager;
         }
 
         public ActionResult Index()
@@ -111,7 +107,7 @@ namespace Angular2App.Controllers
                     taxi = taxi.OrderBy(s => s.StartPoint).ToList();
                     break;
             }*/
-            return Ok(taxiOrders);
+            return Json(taxiOrders);
         }
 /*
         public async Task<IActionResult> MyOrders()
@@ -157,9 +153,13 @@ namespace Angular2App.Controllers
             taxiOrder.OrderStatus = "Free";
             db.TaxiOrders.Add(taxiOrder);
             await db.SaveChangesAsync();
-            return RedirectToAction("TaxiOrders");
+            
+            return Json(taxiOrder.StartPoint,new JsonSerializerSettings
+                {
+                    ContractResolver = new CamelCasePropertyNamesContractResolver()
+                });
         }
-
+/*
         public async Task<IActionResult> CreateTaxiOrderToConcreateDriver(string receiverId)
         {
             TaxiOrder taxiOrder = new TaxiOrder();
@@ -293,6 +293,6 @@ namespace Angular2App.Controllers
                     return View(taxiOrder);
             }
             return NotFound();
-        }
+        }*/
     }
 }

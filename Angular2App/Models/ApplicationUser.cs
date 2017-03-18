@@ -9,7 +9,7 @@ namespace Angular2App.Models
         [Key]
         public int ApplicationUserId { get; set; }
         public bool CarExist { get; set; }
-
+        public string Year { get; set; }
         public string DriverLicense { get; set; }
     }
 }

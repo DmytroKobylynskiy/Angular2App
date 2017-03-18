@@ -6,5 +6,9 @@
         <div class='col-sm-9 body-content'>
             <router-outlet></router-outlet>
         </div>
+        <sebm-google-map [latitude]="lat" [longitude]="lng">
+            <sebm-google-map-marker [latitude]="lat" [longitude]="lng"></sebm-google-map-marker>
+        </sebm-google-map>
+
     </div>
 </div>

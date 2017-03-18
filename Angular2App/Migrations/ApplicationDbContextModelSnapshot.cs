@@ -59,6 +59,8 @@ namespace Angular2App.Migrations
                     b.Property<string>("UserName")
                         .HasAnnotation("MaxLength", 256);
 
+                    b.Property<string>("Year");
+
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedEmail")
@@ -85,65 +87,30 @@ namespace Angular2App.Migrations
                     b.ToTable("Clients");
                 });
 
-            modelBuilder.Entity("Angular2App.Models.TaxiOffer", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Auto")
-                        .IsRequired();
-
-                    b.Property<string>("Name")
-                        .IsRequired();
-
-                    b.Property<string>("OfferOwnerId");
-
-                    b.Property<string>("OfferStatus");
-
-                    b.Property<string>("Place");
-
-                    b.Property<int>("Price");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("TaxiOffers");
-                });
-
             modelBuilder.Entity("Angular2App.Models.TaxiOrder", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Date")
-                        .IsRequired();
+                    b.Property<string>("Date");
 
                     b.Property<float>("Distanse");
 
                     b.Property<float>("Duration");
 
-                    b.Property<string>("EndPoint")
-                        .IsRequired();
+                    b.Property<string>("EndPoint");
 
                     b.Property<bool>("FreightCar");
 
-                    b.Property<string>("OrderOwnerId");
-
                     b.Property<string>("OrderStatus");
 
-                    b.Property<string>("PassengerName")
-                        .IsRequired()
-                        .HasAnnotation("MaxLength", 60);
+                    b.Property<string>("PassengerName");
 
-                    b.Property<string>("PassengerPhone")
-                        .IsRequired();
+                    b.Property<string>("PassengerPhone");
 
-                    b.Property<string>("ReceiverId");
+                    b.Property<string>("StartPoint");
 
-                    b.Property<string>("StartPoint")
-                        .IsRequired();
-
-                    b.Property<string>("Time")
-                        .IsRequired();
+                    b.Property<string>("Time");
 
                     b.Property<bool>("WithAnimals");
 

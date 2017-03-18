@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace Angular2App.Controllers
 {
+    [RequireHttps]
     public class HomeController : Controller
     {
         public IActionResult Index()

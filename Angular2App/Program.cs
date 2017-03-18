@@ -2,9 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Server.Kestrel.Https;
 
 namespace Angular2App
 {
@@ -16,10 +18,13 @@ namespace Angular2App
                 .AddCommandLine(args)
                 .AddEnvironmentVariables(prefix: "ASPNETCORE_")
                 .Build();
-
+           var cert = new X509Certificate2("Angular2App.pfx", 
+                "Diawest95");
+                
             var host = new WebHostBuilder()
                 .UseConfiguration(config)
-                .UseKestrel()
+                .UseKestrel(cfg => cfg.UseHttps(cert))
+                .UseUrls("https://localhost:8090")
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseIISIntegration()
                 .UseStartup<Startup>()
