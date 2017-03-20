@@ -6,6 +6,11 @@
             <label>Начало</label>
             <input  type="text" class="form-control" name="startPoint" [(ngModel)]="startPoint"  />
         </div>
+
+        <input places-auto-complete
+        (initialized$)="initialized($event)"
+        (place_changed)="placeChanged($event)"
+        [types]="['geocode']" />
         <div class="form-group">
             <label>Конец</label>
             <input type="text" class="form-control" name="endPoint" [(ngModel)]="endPoint" />
@@ -25,10 +30,14 @@
         <div class="form-group">
             <button *ngIf="!condition"
                     class="btn btn-default" (click)="createTaxiOrder(myForm)">Добавить</button>
-                    <button *ngIf="condition" [routerLink]="['/weather']"
-                    class="btn btn-default" (click)="getTaxiOrder()">Заказы</button>
+                    <button *ngIf="!condition" 
+                    class="btn btn-default" (click)="requestPosition()">Заказы</button>
         </div>
-       
+        <ng2-map zoom="14" center="Brampton, Canada">
+            <marker *ngFor="let pos of positions" 
+                (click)="showInfoWindow($event)"
+                [position]="pos"></marker>
+        </ng2-map>
+        
 </form>
-
 

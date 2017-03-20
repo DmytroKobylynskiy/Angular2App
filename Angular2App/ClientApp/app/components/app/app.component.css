@@ -4,6 +4,7 @@
         padding-top: 50px;
     }
     .sebm-google-map-container {
-        height: 300px;
+        width: 500px;
+        height: 500px;
     }
 }

@@ -1,8 +1,5 @@
-
+import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule, ApplicationRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { UniversalModule } from 'angular2-universal';
 import { AppComponent } from './components/app/app.component'
@@ -17,7 +14,7 @@ import { ChangeRoleComponent } from './components/changerole/change-role.compone
 import {CreateOrderComponent} from './components/taxiorders/createorder.component';
 import { HttpModule, Http, RequestOptions } from '@angular/http';
 import { provideAuth, AuthHttp, AuthConfig,AuthModule, AuthConfigConsts } from 'angular2-jwt';
-import { AgmCoreModule } from 'angular2-google-maps/core';
+import { Ng2MapModule} from 'ng2-map';
 export function authHttpServiceFactory(http: Http, options: RequestOptions) {
   return new AuthHttp( new AuthConfig({}), http, options);
 }
@@ -40,8 +37,6 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions) {
         UniversalModule, // Must be first import. This automatically imports BrowserModule, HttpModule, and JsonpModule too.
         FormsModule,
         HttpModule,
-        BrowserModule,
-        CommonModule,
         RouterModule.forRoot([
             { path: '', redirectTo: 'home', pathMatch: 'full' },
             { path: 'home', component: HomeComponent },
@@ -50,12 +45,11 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions) {
             { path: 'hello', component: HelloWorldComponent },
             { path: 'weather', component: WeatherComponent },
             { path: 'createTaxiOrder', component : CreateOrderComponent},
-            { path: 'ChangeRoleComponent', component : ChangeRoleComponent},
+            { path: 'changeRole', component : ChangeRoleComponent},
             { path: '**', redirectTo: 'home' }
         ]),
-        AgmCoreModule.forRoot({
-            apiKey: 'AIzaSyA1qfz-tYIfudALUml3shBtNS2lZ3syg00'
-        })
+        Ng2MapModule.forRoot({apiUrl: 'https://maps.google.com/maps/api/js?sensor=true&libraries=places&key=AIzaSyBaiH4wZdZ3nlL9itqn6-D7-LOUsdGuyD4'})
+        
     ],
     providers: [
     {

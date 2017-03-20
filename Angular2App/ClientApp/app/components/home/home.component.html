@@ -5,4 +5,13 @@
     <div class="panel-body">
         Here's some text to get us started....
     </div>
+
+    <input places-auto-complete
+        (initialized$)="initialized($event)"
+        (place_changed)="placeChanged($event)"
+        [types]="['geocode']" />
+    <p>
+    <ng2-map [center]="center"></ng2-map>
+    place: {{address | json}}
+    </p>
 </div>
