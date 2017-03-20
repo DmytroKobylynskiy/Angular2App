@@ -14,7 +14,8 @@ import { ChangeRoleComponent } from './components/changerole/change-role.compone
 import {CreateOrderComponent} from './components/taxiorders/createorder.component';
 import { HttpModule, Http, RequestOptions } from '@angular/http';
 import { provideAuth, AuthHttp, AuthConfig,AuthModule, AuthConfigConsts } from 'angular2-jwt';
-import { Ng2MapModule} from 'ng2-map';
+import { Ng2MapModule } from 'ng2-map';
+import { MapsService } from "./components/taxiorders/maps.service";
 export function authHttpServiceFactory(http: Http, options: RequestOptions) {
   return new AuthHttp( new AuthConfig({}), http, options);
 }
@@ -65,7 +66,7 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions) {
             tokenGetter: (() => localStorage.getItem('id_token')),
             globalHeaders: [{ 'Content-Type': 'application/json' }],
             noJwtError: true
-    })
+    }),MapsService
   ]
     
 })
