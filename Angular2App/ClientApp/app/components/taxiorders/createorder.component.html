@@ -7,14 +7,16 @@
             <input places-auto-complete
         (initialized$)="mapsService.initialized($event)"
         (place_changed)="mapsService.placeChanged($event)"
-        [types]="['geocode']" />
+        [types]="['geocode']" type="text" class="form-control" name="startPoint" [(ngModel)]="startPoint"/>
     
     <button *ngIf="!condition" class="btn btn-default" (click)="mapsService.requestPosition()">Местоположение</button>
         </div>
-        <!--<button *ngIf="!condition" class="btn btn-default" (click)="mapsService.requestPosition()">Местоположение</button>-->
         <div class="form-group">
             <label>Конец</label>
-            <input type="text" class="form-control" name="endPoint" [(ngModel)]="endPoint" />
+            <input places-auto-complete
+                (initialized$)="mapsService.initialized($event)"
+                (place_changed)="mapsService.placeChanged($event)"
+                [types]="['geocode']" type="text" class="form-control" name="endPoint" [(ngModel)]="endPoint" />
         </div>
         <div class="form-group">
             <label>Дата</label>
@@ -40,8 +42,7 @@
                     lat: [[lat]], lng: [[lng]]
                 </info-window>
             </ng2-map>
-        place: {{address | json}}
-        </p>
-            
+            place: {{address | json}}
+        </p>     
 </form>
 

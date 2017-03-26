@@ -10,7 +10,7 @@ import 'rxjs/add/observable/throw';
 export class MapsService{
  
     constructor(private http: Http,private ref: ChangeDetectorRef){ 
-        console.log("Constr"+this.positions);
+        //console.log("Constr"+this.positions);
     }
     //public longitude ?: any;
     //public latitude ?: any;
@@ -39,15 +39,6 @@ export class MapsService{
         });
     }
 
-   /* showRandomMarkers() {
-        let randomLat: number, randomLng: number;
-        this.positions = [];
-        for (let i = 0 ; i < 9; i++) {
-        randomLat = Math.random() * 0.0099 + 43.7250;
-        randomLng = Math.random() * 0.0099 + -79.7699;
-        this.positions.push([randomLat, randomLng]);
-        }
-    } */
     public getPos(){
         return this.positions;
     }
@@ -71,8 +62,8 @@ export class MapsService{
     }
     successCallback=(position)=> {
         //console.log(position.coords.longitude);
-        console.log([position.coords.latitude, position.coords.longitude]);
-                console.log("SC"+this.positions);
+        /*console.log([position.coords.latitude, position.coords.longitude]);
+                console.log("SC"+this.positions);*/
         this.positions.push([position.coords.latitude, position.coords.longitude]);
     }
     
@@ -82,21 +73,29 @@ export class MapsService{
     center: any;
 
     initialized(autocomplete: any) {
-        console.log("2132123123");
-
         this.autocomplete = autocomplete;
     }
     placeChanged=(place)=> {
         
         this.center = place.geometry.location;
         for (let i = 0; i < place.address_components.length; i++) {
-        let addressType = place.address_components[i].types[0];
-        this.address[addressType] = place.address_components[i].long_name;
+            let addressType = place.address_components[i].types[0];
+            this.address[addressType] = place.address_components[i].long_name;
         }
-        console.log(this.center.lat()+" " +this.center.lng());
-        this.positions.push([this.center.lat(), this.center.lng()]);
-                console.log("Autp"+this.positions);
+        
+        if(this.checkExist([this.center.lat(), this.center.lng()].toString())){
+            this.positions.push([this.center.lat(), this.center.lng()]);
+        }
+        //       
         this.ref.detectChanges();
+    }
+
+    public checkExist=(str)=>{
+        for (let i = 0; i < this.positions.length; i++) {
+            if(this.positions[i].toString()==str)
+                return false;
+        }
+        return true;
     }
     
 }
