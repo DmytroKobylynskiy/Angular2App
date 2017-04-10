@@ -1,33 +1,20 @@
+<button (click)="getTaxiOrder()" class="btn btn-default" data-toggle="tooltip" title="Подробнее" data-placement="top"  ><span class="glyphicon glyphicon-info-sign"></span></button>
+<table *ngIf="taxiOrders">
+    <tr *ngFor="let item of taxiOrders; let i = index">{{item.startPoint}}<div *ngIf="item.condition">{{item}}<br><br><br><br><br><br></div>
+        <td>
+        <div class="btn-group">
+            <button class="btn btn-default" data-toggle="tooltip" title="Подробнее" data-placement="top"  (click)="onSelect(item)"><span class="glyphicon glyphicon-info-sign"></span></button>
+            <button class="btn btn-default" data-toggle="tooltip" title="Изменить" data-placement="top"   ><span class="glyphicon glyphicon-pencil"></span></button>
+            <button class="btn btn-default" data-toggle="tooltip" title="Удалить" data-placement="top"   ><span class="glyphicon glyphicon-remove"></span> </button>
+            <button class="btn btn-default"  data-toggle="tooltip" title="Принять" data-placement="top"  ><span class="glyphicon glyphicon-ok"></span></button>
+            <button class="btn btn-default" data-toggle="tooltip" title="Принять" data-placement="top"   ><span class="glyphicon glyphicon-ok"></span> </button>
+        </div> 
+        </td>
+    </tr>
+<table>
 
 
-<h1>Create Taxi Order</h1>
-<form   #myForm="ngForm" novalidate>
-        <div class="form-group">
-            <label>Начало</label>
-            <input type="text" class="form-control" name="startPoint" [(ngModel)]="startPoint"  />
-        </div>
-        <div class="form-group">
-            <label>Конец</label>
-            <input type="text" class="form-control" name="endPoint" [(ngModel)]="endPoint" />
-        </div>
-        <div class="form-group">
-            <label>Дата</label>
-            <input type="date" class="form-control" name="date" [(ngModel)]="date" />
-        </div>
-        <div class="form-group">
-            <label>Время</label>
-            <input type="time" class="form-control" name="time" [(ngModel)]="time" />
-        </div>
-        <div class="form-group">
-            <label>Имя</label>
-            <input type="text" class="form-control" name="passengerName" [(ngModel)]="passengerName" />
-        </div>
-        <div class="form-group">
-            <button *ngIf="condition"
-                    class="btn btn-default" (click)="createTaxiOrder(myForm)">Добавить</button>
-                    <button *ngIf="!condition" [routerLink]="['/weather']"
-                    class="btn btn-default" (click)="getTaxiOrder()">Заказы</button>
-        </div>
-</form>
+
+
 
 

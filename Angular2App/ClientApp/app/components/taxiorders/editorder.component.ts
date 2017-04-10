@@ -10,11 +10,11 @@ import './taxiorders';
 
 @Component({
     selector: 'angular2app',
-    template: require('./createorder.component.html'),
+    template: require('./editorder.component.html'),
     providers: [HttpService,MapsService]
 })
 
-export class CreateOrderComponent {
+export class EditOrderComponent {
     public taxiOrders: Array<TaxiOrder>;
     public taxiOrder : TaxiOrder;
     public start : string;
@@ -25,9 +25,20 @@ export class CreateOrderComponent {
     public done : boolean ;
     public condition: boolean=false;
     constructor(private http: Http,private httpService: HttpService,private mapsService: MapsService,private ref: ChangeDetectorRef) {
-        
+        let params: URLSearchParams = new URLSearchParams();
+        this.http.get('api/order/edittaxiorder',{
+            search: params
+        }).map(res => {
+            if(res.status != 200) {
+                throw new Error('Error ' + res.status);
+            } else {
+                return res.json();
+            }
+        }).subscribe(res => {
+            this.taxiOrder = res;
+        });
     }
-    createTaxiOrder(form : NgForm){
+    EditTaxiOrder(form : NgForm){
         const body = JSON.stringify(this.taxiOrder);
         //
 
@@ -60,16 +71,11 @@ export class CreateOrderComponent {
             
             //console.log(this.end);
             console.log(form.value.startPoint +" " + form.value.endPoint); 
-            this.httpService.postData(form)
+            this.httpService.updateData(form)
                 .subscribe((data) => {this.str=data; this.done=true;});
         });
         
               
-    }
-    public getTaxiOrder(chosenCity: string) {
-        this.http.get('/api/order/taxiorders').subscribe(result => {
-            this.taxiOrders = result.json();
-        });
     }
 
     submit(form: NgForm){

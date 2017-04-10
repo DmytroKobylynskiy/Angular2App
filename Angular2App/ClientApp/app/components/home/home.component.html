@@ -5,18 +5,4 @@
     <div class="panel-body">
         Here's some text to get us started....
     </div>
-
-    <input places-auto-complete
-        (initialized$)="initialized($event)"
-        (place_changed)="placeChanged($event)"
-        [types]="['geocode']" />
-    <p>
-    <ng2-map zoom="2" >
-            <marker *ngFor="let pos of positions" 
-                [position]="pos"></marker>
-        </ng2-map>
-    place: {{address | json}}
-    </p>
-    <button (click)="showRandomMarkers()">Show Random Markers</button>
-    <button *ngIf="!condition" class="btn btn-default" (click)="requestPosition()">Местоположение</button>
 </div>

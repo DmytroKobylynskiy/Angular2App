@@ -66,14 +66,15 @@ namespace Angular2App.Controllers
         public async Task<IActionResult> TaxiOrders()
         {
             List<TaxiOrder> taxiOrders = await db.TaxiOrders.ToListAsync();
-            /*List<TaxiOrder> taxi = taxiOrders.ToList();
-            for (int i = 0; i < taxiOrders.Count(); i++)
+            List<TaxiOrder> taxi = taxiOrders;
+            for (int i = 0; i < taxi.Count; i++)
             {
-                if (taxi[i].OrderStatus == "Done" && taxi[i].ReceiverId == null)
-                {
-                    taxi.Remove(taxi[i]);
+                if(taxiOrders[i].StartPoint.IndexOf('|')>0){
+                     taxi[i].StartPoint = taxiOrders[i].StartPoint.Remove(0, taxiOrders[i].StartPoint.IndexOf('|')+1);
                 }
             }
+
+            /*
             SortState.SortingState sortOrder = SortState.SortingState.StartPointAsc;
             ViewData["StartPointSort"] = sortOrder == SortState.SortingState.StartPointAsc ? SortState.SortingState.StartPointDesc : SortState.SortingState.StartPointAsc;
             ViewData["EndPointSort"] = sortOrder == SortState.SortingState.EndPointAsc ? SortState.SortingState.EndPointDesc : SortState.SortingState.EndPointAsc;
@@ -107,7 +108,21 @@ namespace Angular2App.Controllers
                     taxi = taxi.OrderBy(s => s.StartPoint).ToList();
                     break;
             }*/
-            return Json(taxiOrders);
+            return Json(taxi);
+        }
+
+        [HttpGet("[action]")]
+        public async Task<IActionResult> TaxiOrdersCoords()
+        {
+            List<TaxiOrder> taxiOrders = await db.TaxiOrders.ToListAsync();
+            List<TaxiOrder> taxi = taxiOrders;
+            for (int i = 0; i < taxi.Count; i++)
+            {
+                if(taxiOrders[i].StartPoint.IndexOf('|')>0){
+                     taxi[i].StartPoint = taxiOrders[i].StartPoint.Substring(0,taxiOrders[i].StartPoint.IndexOf('|'));
+                }
+            }
+            return Json(taxi);
         }
 /*
         public async Task<IActionResult> MyOrders()
@@ -181,35 +196,28 @@ namespace Angular2App.Controllers
             await db.SaveChangesAsync();
             return RedirectToAction("TaxiOrders");
         }
-
-        public async Task<IActionResult> DetailsTaxiOrder(int? id)
+*/
+        [HttpGet("[action]")]
+        public async Task<IActionResult> EditTaxiOrder([FromBody]int? id)
         {
             if (id != null)
             {
                 TaxiOrder taxiOrder = await db.TaxiOrders.FirstOrDefaultAsync(p => p.Id == id);
                 if (taxiOrder != null)
-                    return View(taxiOrder);
+                    return Json(taxiOrder,new JsonSerializerSettings
+                    {
+                        ContractResolver = new CamelCasePropertyNamesContractResolver()
+                    });
             }
             return NotFound();
         }
 
-        public async Task<IActionResult> EditTaxiOrder(int? id)
-        {
-            if (id != null)
-            {
-                TaxiOrder taxiOrder = await db.TaxiOrders.FirstOrDefaultAsync(p => p.Id == id);
-                if (taxiOrder != null)
-                    return View(taxiOrder);
-            }
-            return NotFound();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> EditTaxiOrder(TaxiOrder taxiOrder)
+        [HttpPost("[action]")]
+        public async Task<IActionResult> EditTaxiOrder([FromBody]TaxiOrder taxiOrder)
         {
             db.TaxiOrders.Update(taxiOrder);
             await db.SaveChangesAsync();
-            return RedirectToAction("TaxiOrders");
+            return Ok();
         }
 
         
@@ -239,7 +247,7 @@ namespace Angular2App.Controllers
             }
             return NotFound();
         }
-
+/*
         public async Task<IActionResult> AgreeTaxiOrder(int? id)
         {
             if (id != null)

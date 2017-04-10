@@ -12,5 +12,6 @@ interface TaxiOrder {
     passengerName : string;
     OrderOwnerId : string;
     OrderStatus : string;
-    ReceiverId : string;    
+    ReceiverId : string;
+    condition : boolean;    
 }

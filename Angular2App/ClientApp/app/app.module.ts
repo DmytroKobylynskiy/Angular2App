@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { RouterModule,Routes,Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { UniversalModule } from 'angular2-universal';
 import { AppComponent } from './components/app/app.component'
@@ -12,6 +12,7 @@ import { WeatherComponent } from './components/weather/weather.component';
 import { TaxiOrdersComponent } from './components/taxiorders/taxiorders.component';
 import { ChangeRoleComponent } from './components/changerole/change-role.component';
 import {CreateOrderComponent} from './components/taxiorders/createorder.component';
+import { EditOrderComponent }  from './components/taxiorders/editorder.component';
 import { HttpModule, Http, RequestOptions } from '@angular/http';
 import { provideAuth, AuthHttp, AuthConfig,AuthModule, AuthConfigConsts } from 'angular2-jwt';
 import { Ng2MapModule } from 'ng2-map';
@@ -19,7 +20,10 @@ import { MapsService } from "./components/taxiorders/maps.service";
 export function authHttpServiceFactory(http: Http, options: RequestOptions) {
   return new AuthHttp( new AuthConfig({}), http, options);
 }
-
+const taxiOrderRoutes: Routes = [
+  { path: 'taxiorders',  component: TaxiOrdersComponent },
+  { path: 'taxiorders/:id', component: EditOrderComponent }
+];
 @NgModule({
     bootstrap: [ AppComponent ],
     declarations: [
@@ -32,12 +36,14 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions) {
         WeatherComponent,
         TaxiOrdersComponent,
         ChangeRoleComponent,
-        CreateOrderComponent
+        CreateOrderComponent,
+        EditOrderComponent
     ],
     imports: [
         UniversalModule, // Must be first import. This automatically imports BrowserModule, HttpModule, and JsonpModule too.
         FormsModule,
         HttpModule,
+        RouterModule.forChild(taxiOrderRoutes),
         RouterModule.forRoot([
             { path: '', redirectTo: 'home', pathMatch: 'full' },
             { path: 'home', component: HomeComponent },

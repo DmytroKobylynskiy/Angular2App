@@ -15,6 +15,7 @@ export class MapsService{
     //public longitude ?: any;
     //public latitude ?: any;
     public positions = [  ];
+    public end_positions = [  ];
     onMapReady(map) {
         console.log('map', map);
         console.log('markers', map.markers);  
@@ -42,6 +43,10 @@ export class MapsService{
     public getPos(){
         return this.positions;
     }
+
+    public getEndPos(){
+        return this.positions;
+    }
     nav = null;
     requestPosition=()=> {
         if (this.nav == null) {
@@ -62,16 +67,17 @@ export class MapsService{
     }
     successCallback=(position)=> {
         //console.log(position.coords.longitude);
-        /*console.log([position.coords.latitude, position.coords.longitude]);
-                console.log("SC"+this.positions);*/
-        this.positions.push([position.coords.latitude, position.coords.longitude]);
+        /*console.log([position.coords.latitude, position.coords.longitude]);*/
+                console.log("SC"+position);
+        this.positions[0]=[position.coords.latitude, position.coords.longitude];
     }
     
 
     autocomplete: any;
     address: any = {};
+    public adresa = [];
     center: any;
-
+    end_center: any;
     initialized(autocomplete: any) {
         this.autocomplete = autocomplete;
     }
@@ -81,18 +87,48 @@ export class MapsService{
         for (let i = 0; i < place.address_components.length; i++) {
             let addressType = place.address_components[i].types[0];
             this.address[addressType] = place.address_components[i].long_name;
+            this.adresa.push( place.address_components[i].long_name);
+        }
+        console.log(this.adresa.toString());
+        if(this.checkExist([this.center.lat(), this.center.lng()].toString())){
+            this.positions[0]=[this.center.lat(), this.center.lng()];
+        }
+        this.adresa = [];
+        //       
+        this.ref.detectChanges();
+    }
+
+    endPlaceChanged=(place)=> {
+        
+        this.center = place.geometry.location;
+        for (let i = 0; i < place.address_components.length; i++) {
+            let addressType = place.address_components[i].types[0];
+            this.address[addressType] = place.address_components[i].long_name;
         }
         
         if(this.checkExist([this.center.lat(), this.center.lng()].toString())){
-            this.positions.push([this.center.lat(), this.center.lng()]);
+            this.end_positions[0]=[this.center.lat(), this.center.lng()];
         }
         //       
         this.ref.detectChanges();
     }
 
+    public getAdresa=()=>{
+        console.log(this.adresa);
+        return this.adresa.toString();
+    }
+
     public checkExist=(str)=>{
         for (let i = 0; i < this.positions.length; i++) {
             if(this.positions[i].toString()==str)
+                return false;
+        }
+        return true;
+    }
+
+    public endCheckExist=(str)=>{
+        for (let i = 0; i < this.end_positions.length; i++) {
+            if(this.end_positions[i].toString()==str)
                 return false;
         }
         return true;
