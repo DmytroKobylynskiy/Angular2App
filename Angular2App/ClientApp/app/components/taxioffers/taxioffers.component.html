@@ -1,0 +1,28 @@
+<h3>Список предложений</h3> 
+    <span *ngIf="isUser">Не нашли подходящего? Создайте свое заказ </span><button *ngIf="isUser" class="btn btn-default" 
+    [routerLink]="['/createTaxiOrder']"><span class="glyphicon glyphicon-plus"></span></button>
+<table class="container" *ngIf="taxiOffers">
+    <tbody>
+        <tr *ngFor="let item of taxiOffers; let i = index">
+            <td>{{i}}.{{item.place}}{{isCarrier}}{{isUser}}
+                <div *ngIf="item.condition">
+                    <b>Местоположение:</b> {{item.place}}<br>
+                    <b>Машина:</b>{{item.auto}}<br>
+                    <b>Имя:</b>{{item.name}}<br><br>
+                </div>
+            </td>
+            <td class="mystyle">
+                <div class="btn-group">
+                    <button class="btn btn-default" data-toggle="tooltip" title="Подробнее" data-placement="top"  (click)="onSelect(i)"><span class="glyphicon glyphicon-info-sign"></span></button>
+                    <button *ngIf="isAdmin" class="btn btn-default" data-toggle="tooltip" title="Изменить" data-placement="top"   (click)="onEdit(item)"><span class="glyphicon glyphicon-pencil"></span></button>
+                    <button *ngIf="isAdmin" class="btn btn-default" data-toggle="tooltip" title="Удалить" data-placement="top"   (click)="onDelete(item)"><span class="glyphicon glyphicon-remove"></span> </button>
+                    <button *ngIf="isUser" class="btn btn-default"  data-toggle="tooltip" title="Принять" data-placement="top"  (click)="onAgree(item)"><span class="glyphicon glyphicon-ok"></span></button>
+                </div> 
+            </td>
+        </tr>
+    </tbody>
+<table>
+
+
+
+

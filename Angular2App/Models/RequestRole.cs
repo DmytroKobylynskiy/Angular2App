@@ -1,11 +1,15 @@
-﻿namespace Angular2App.Models
+﻿using System.ComponentModel.DataAnnotations;
+using System.Globalization;
+
+namespace Angular2App.Models
 {
     public class RequestRole
     {
-        public int Id { get; set; }
-        public string UserId { get; set; }
-        public string UserName { get; set; }
+        [Key]
+        public int RequestId { get; set; }
+        public string RequestOwnerId { get; set; }
         public string NewRole { get; set; }
         public string RequestStatus { get; set; }
+        public string DriverLicense { get; set; }
     }
 }

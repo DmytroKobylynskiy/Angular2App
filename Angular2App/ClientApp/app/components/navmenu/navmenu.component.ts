@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
-import { Auth1Service } from './auth1.service';
-import { Http } from '@angular/http';
-import { HttpService} from './http.service';
+import { Auth1Service } from '../services/auth1.service';
+import { HttpService} from '../services/http.service';
+import {Http,Response, Headers, URLSearchParams} from '@angular/http';
+import { Router, ActivatedRoute, Params } from '@angular/router';
+import '../entities/mes';
 @Component({
     selector: 'nav-menu',
     template: require('./navmenu.component.html'),
@@ -11,17 +13,44 @@ import { HttpService} from './http.service';
 export class NavMenuComponent {
 
     private userRole : string;
+    private nsLength : number;
     public loggedIn : boolean;
+    public done : boolean;
+    public notifications : Array<NotificationOrder>; 
     constructor(private http: Http,private httpService: HttpService,private authService: Auth1Service) {
     }
 
-    public login() {
-        
+    ngOnInit(){
+        this.getNumNotifications();
     }
 
-    public getUserRole() {
-        this.http.get('/api/account/profile').subscribe(result => {
-            this.userRole = result.json ? result.json() : result;
-        });
+    login(){
+        this.authService.login();
     }
+    getNumNotifications(){
+        if(this.authService.loggedIn()){
+            let params: URLSearchParams = new URLSearchParams();
+            params.set('ownerId', this.authService.userProfile.user_id);
+            this.http.get('api/order/getNumNotificationsOrder', {
+                search: params
+            }).subscribe(
+            (response) => {this.nsLength = response.json();this.done=true}, 
+            (error) => console.log("error")
+        ); 
+        }
+    }
+
+    getNotifications(){
+        if(this.authService.loggedIn()){
+            let params: URLSearchParams = new URLSearchParams();
+            params.set('ownerId', this.authService.userProfile.user_id);
+            this.http.get('api/order/getNotificationsOrder', {
+                search: params
+            }).subscribe(
+            (response) => {this.notifications = response.json();this.nsLength=this.notifications.length;this.done=true}, 
+            (error) => console.log("error")
+        ); 
+        }
+    }
+
 }

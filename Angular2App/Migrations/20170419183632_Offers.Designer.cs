@@ -8,9 +8,10 @@ using Angular2App.Data;
 namespace Angular2App.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170419183632_Offers")]
+    partial class Offers
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.0.0-rtm-21431")
@@ -87,48 +88,6 @@ namespace Angular2App.Migrations
                     b.ToTable("Clients");
                 });
 
-            modelBuilder.Entity("Angular2App.Models.NotificationOrder", b =>
-                {
-                    b.Property<int>("NotificationId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<bool>("Condition");
-
-                    b.Property<string>("NotificationStatus");
-
-                    b.Property<string>("NotificationTitle");
-
-                    b.Property<int>("OrderId");
-
-                    b.Property<string>("OrderOwnerId");
-
-                    b.Property<string>("OrderStatus");
-
-                    b.Property<string>("ReceiverId");
-
-                    b.HasKey("NotificationId");
-
-                    b.ToTable("NotificationsOrder");
-                });
-
-            modelBuilder.Entity("Angular2App.Models.RequestRole", b =>
-                {
-                    b.Property<int>("RequestId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("DriverLicense");
-
-                    b.Property<string>("NewRole");
-
-                    b.Property<string>("RequestOwnerId");
-
-                    b.Property<string>("RequestStatus");
-
-                    b.HasKey("RequestId");
-
-                    b.ToTable("RequestsChangeRole");
-                });
-
             modelBuilder.Entity("Angular2App.Models.TaxiOffer", b =>
                 {
                     b.Property<int>("Id")
@@ -168,15 +127,11 @@ namespace Angular2App.Migrations
 
                     b.Property<bool>("FreightCar");
 
-                    b.Property<string>("OrderOwnerId");
-
                     b.Property<string>("OrderStatus");
 
                     b.Property<string>("PassengerName");
 
                     b.Property<string>("PassengerPhone");
-
-                    b.Property<string>("ReceiverId");
 
                     b.Property<string>("StartPoint");
 

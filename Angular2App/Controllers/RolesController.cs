@@ -1,106 +1,87 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
+using System.Linq;
+using Angular2App.Data;
 using Angular2App.Models;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using Microsoft.Extensions.Logging;
 
 namespace Angular2App.Controllers
 {
-    [Authorize(Roles = "admin")]
-    public class RolesController : Controller
+    [RequireHttps]
+    [Route("api/[controller]")]
+    public class RoleController : Controller
     {
-        RoleManager<IdentityRole> _roleManager;
-        UserManager<ApplicationUser> _userManager;
         private readonly ILogger _logger;
-        public RolesController(ILoggerFactory loggerFactory,RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager)
+        private ApplicationDbContext db;
+        public RoleController(ILoggerFactory loggerFactory,ApplicationDbContext context)
         {
-            _roleManager = roleManager;
-            _userManager = userManager;
-            _logger = loggerFactory.CreateLogger<RolesController>();
-        }
-        public IActionResult Index() => View(_roleManager.Roles.ToList());
-
-        public IActionResult Create() => View();
-        [HttpPost]
-        public async Task<IActionResult> Create(string name)
-        {
-            if (!string.IsNullOrEmpty(name))
-            {
-                IdentityResult result = await _roleManager.CreateAsync(new IdentityRole(name));
-                if (result.Succeeded)
-                {
-                    return RedirectToAction("Index");
-                }
-                else
-                {
-                    foreach (var error in result.Errors)
-                    {
-                        ModelState.AddModelError(string.Empty, error.Description);
-                    }
-                }
-            }
-            return View(name);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Delete(string id)
-        {
-            IdentityRole role = await _roleManager.FindByIdAsync(id);
-            if (role != null)
-            {
-                IdentityResult result = await _roleManager.DeleteAsync(role);
-            }
-            return RedirectToAction("Index");
-        }
-
-        public IActionResult UserList() => View(_userManager.Users.ToList());
-
-        public async Task<IActionResult> Edit(string userId)
-        {
-            _logger.LogInformation(userId);
-            ApplicationUser user = await _userManager.FindByIdAsync(userId);
-            if (user != null)
-            {
-                var userRoles = await _userManager.GetRolesAsync(user);
-                var allRoles = _roleManager.Roles.ToList();
-                ChangeRoleViewModel model = new ChangeRoleViewModel
-                {
-                    UserId = user.Id,
-                    UserEmail = user.Email,
-                    UserRoles = userRoles,
-                    AllRoles = allRoles
-                };
-                return View(model);
-            }
-
-            return NotFound();
-        }
-        [HttpPost]
-        public async Task<IActionResult> Edit(string userId, List<string> roles)
-        {
-            ApplicationUser user = await _userManager.FindByIdAsync(userId);
-            if (user != null)
-            {
-                var userRoles = await _userManager.GetRolesAsync(user);
-                var allRoles = _roleManager.Roles.ToList();
-                var addedRoles = roles.Except(userRoles);
-                var removedRoles = userRoles.Except(roles);
-
-                await _userManager.AddToRolesAsync(user, addedRoles);
-
-                await _userManager.RemoveFromRolesAsync(user, removedRoles);
-
-                return RedirectToAction("UserList");
-            }
-
-            return NotFound();
+            db = context;
+            _logger = loggerFactory.CreateLogger<RoleController>();
         }
         
+        [HttpGet("[action]")]
+        public async Task<IActionResult> ChangeRoleRequests()
+        {
+            List<RequestRole> requests = new List<RequestRole>();
+            
+            using(db){
+                    var changeRoleRequests = from r in db.RequestsChangeRole
+                                        where r.RequestStatus == "New"
+                                        select r;
+                    foreach (var request in changeRoleRequests)
+                    {
+                            requests.Add(request);
+                    }
+                    requests = await db.RequestsChangeRole.ToListAsync();
+                    return Json(requests,new JsonSerializerSettings
+                            {
+                                ContractResolver = new CamelCasePropertyNamesContractResolver()
+                            });
+                }
+            return Json("ne ok");
+        }
 
+        [HttpPost("[action]")]
+        public async Task<IActionResult> CreateChangeRoleRequest([FromBody]RequestRole requestRole)
+        {
+            _logger.LogInformation("dasdsadasdasdas");
+            if (requestRole!=null)
+            {
+                requestRole.RequestStatus = "New";
+                db.RequestsChangeRole.Add(requestRole);
+                await db.SaveChangesAsync();
+                _logger.LogInformation("dasdsadasdasdas");
+                return Json("OK");
+            }
+            _logger.LogInformation("dasdsadasdasdas");
+            return Json("ne ok");
+        }
 
+        [HttpGet("[action]")]
+        [HttpGet("{id}")]
+        [HttpGet("{status}")]
+        public async Task<IActionResult> SetRequestStatus(int id,string status)
+        {   
+            if (id != null)
+            {
+                RequestRole request = await db.RequestsChangeRole.FirstOrDefaultAsync(p => p.RequestId == id);
+                if (request != null)
+                {
+                    request.RequestStatus = status;
+                    db.RequestsChangeRole.Update(request);
+                    await db.SaveChangesAsync();
+                    return Json(request,new JsonSerializerSettings
+                    {
+                        ContractResolver = new CamelCasePropertyNamesContractResolver()
+                    });
+                } 
+            }
+            return NotFound();
+        }
     }
 }

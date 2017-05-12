@@ -8,6 +8,7 @@ import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import './taxiorders';
 import { Auth1Service } from "../services/auth1.service";
+import { ActivatedRoute } from "@angular/router";
 
 @Component({
     selector: 'angular2app',
@@ -15,9 +16,10 @@ import { Auth1Service } from "../services/auth1.service";
     providers: [HttpService,MapsService,Auth1Service]
 })
 
-export class CreateOrderComponent {
+export class CreateOrderToDriverComponent {
     public taxiOrders: Array<TaxiOrder>;
     public taxiOrder : TaxiOrder;
+    public receiverId : string;
     public start : string;
     public end : string;
     public str : string;
@@ -25,13 +27,18 @@ export class CreateOrderComponent {
     public strEnd : string;
     public done : boolean ;
     public condition: boolean=false;
-    constructor(private auth : Auth1Service,private http: Http,private httpService: HttpService,private mapsService: MapsService,private ref: ChangeDetectorRef) {
+    constructor(private route: ActivatedRoute,private auth : Auth1Service,private http: Http,private httpService: HttpService,private mapsService: MapsService,private ref: ChangeDetectorRef) {
+        
+    }
+    ngOnInit() {
+        console.log(this.route.snapshot.url[1].path);
+        this.receiverId = this.route.snapshot.url[1].path;
         
     }
     createTaxiOrder(form : NgForm){
         const body = JSON.stringify(this.taxiOrder);
         //
-
+        
         let headers = new Headers({ 'Content-Type': 'application/json;charset=utf-8' });
         this.condition = true;
         console.log(this.mapsService.positions[0][1]);
@@ -56,15 +63,19 @@ export class CreateOrderComponent {
             }).subscribe(res => {
                 this.end = res.results[0].formatted_address;
                 form.value.endPoint = this.mapsService.getEndPos() + "|" + this.end;
-                
                 //console.log(this.end);
                 console.log(form.value.startPoint +" " + form.value.endPoint); 
                 form.value.orderOwnerId=this.auth.userProfile.user_id;
+                form.value.receiverId=this.receiverId
                 console.log(form.value.orderOwnerId);
                 this.httpService.postData(form)
                     .subscribe((data) => {this.str=data; this.done=true;});
             });
-        });   
+        });
+
+        
+        
+              
     }
     public getTaxiOrder(chosenCity: string) {
         this.http.get('/api/order/taxiorders').subscribe(result => {

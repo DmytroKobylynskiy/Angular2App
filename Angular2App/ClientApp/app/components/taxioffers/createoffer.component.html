@@ -1,0 +1,41 @@
+
+<h1>Создание нового предложения</h1>
+<form #myForm="ngForm" novalidate>
+    <div class="form-group">
+            <label>Местоположение</label>
+            <input places-auto-complete
+                (initialized$)="mapsService.initialized($event)"
+                (place_changed)="mapsService.placeChanged($event)"
+        [types]="['geocode']" type="text" class="form-control" name="place" [(ngModel)]="place"/>
+        <button *ngIf="!condition" class="btn btn-default" (click)="mapsService.requestPosition()">Местоположение</button>
+    </div>
+    <div class="form-group">
+            <label>Автомобиль</label>
+            <input type="text" class="form-control" name="auto" [(ngModel)]="auto" />
+    </div>
+    <div class="form-group">
+            <label>Цена</label>
+            <input type="number" class="form-control" name="price" [(ngModel)]="price" />
+    </div>
+    <div class="form-group">
+            <label>Имя</label>
+            <input type="text" class="form-control" name="name" [(ngModel)]="name" />
+    </div>
+    <div class="form-group">
+            <button *ngIf="!condition"
+                    class="btn btn-default" (click)="createOffer(myForm)">Добавить</button>
+    </div>
+     <ng2-map zoom="2" >
+        <marker   *ngFor="let pos of mapsService.positions" 
+            [position]="pos" (click)="mapsService.clicked($event)"
+            [icon]="{
+                url: './assets/img/car_share.png'
+                }">
+        </marker>
+        <info-window id="iw">
+            lat: [[lat]], lng: [[lng]]
+        </info-window>
+    </ng2-map>
+</form>
+
+

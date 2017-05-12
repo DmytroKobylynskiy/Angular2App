@@ -6,7 +6,7 @@ namespace Angular2App.Data
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
-       
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
@@ -14,7 +14,9 @@ namespace Angular2App.Data
         public DbSet<Client> Clients {get;set;}
         //public DbSet<TaxiOffer> TaxiOffers {get;set;}
         public DbSet<TaxiOrder> TaxiOrders {get;set;}
-        public ApplicationDbContext Db { get; set; }
+        public DbSet<TaxiOffer> Offers {get;set;}
+        public DbSet<NotificationOrder> NotificationsOrder{get;set;}
+        public DbSet<RequestRole> RequestsChangeRole{get;set;}
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

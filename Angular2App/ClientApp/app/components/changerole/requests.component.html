@@ -1,0 +1,19 @@
+
+<table class="container" *ngIf="changeRoleRequests">
+    <tbody>
+        <tr *ngFor="let item of changeRoleRequests; let i = index">
+            <td class="mystyle-td">{{i}} Пользователь:  {{item.requestOwnerId}} Водительские права: {{item.driverLicense}}
+            </td>
+            <td class="mystyle">
+                <div class="btn-group">
+                    <button class="btn btn-default" data-toggle="tooltip" title="Удалить" data-placement="top"   (click)="onReject(i)"><span class="glyphicon glyphicon-remove"></span> </button>
+                    <button class="btn btn-default"  data-toggle="tooltip" title="Принять" data-placement="top"  (click)="onAgree(i)"><span class="glyphicon glyphicon-ok"></span></button>
+                </div> 
+            </td>
+        </tr>
+    </tbody>
+<table>
+
+
+
+

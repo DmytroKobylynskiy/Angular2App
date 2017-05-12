@@ -4,12 +4,7 @@
         <div class="form-group">
             <label>Водительские права</label>
             <input type="text" class="form-control" name="driverLicense" [(ngModel)]="driverLicense" />
-        </div>
-        <div class="form-group">
-            <label>Машина</label>
-            <input type="text" class="form-control" name="carType" [(ngModel)]="carType" />
-        </div>
-        
+        </div>        
             <input type="radio" [ngModel]="roleUser" 
             (ngModelChange)="roleUser = 'customer'"  name="roleUser" value="customer">Заказчик<br>
 

@@ -10,8 +10,11 @@ interface TaxiOrder {
     duration : number;
     passengerPhone : string ;
     passengerName : string;
-    OrderOwnerId : string;
-    OrderStatus : string;
-    ReceiverId : string;
-    condition : boolean;    
+    orderOwnerId : string;
+    orderStatus : string;
+    expectedDate : string;
+    expectedTime : string;
+    receiverId : string;
+    condition : boolean;   
+    conditionAgree : boolean;  
 }

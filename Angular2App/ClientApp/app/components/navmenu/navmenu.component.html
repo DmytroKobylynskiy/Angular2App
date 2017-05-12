@@ -7,7 +7,7 @@
                 <span class='icon-bar'></span>
                 <span class='icon-bar'></span>
             </button>
-            <a class='navbar-brand' [routerLink]="['/home']">Ang2pdsd</a>
+            <a class='navbar-brand' [routerLink]="['/home']">Transportation service </a>
         </div>
         <div class='clearfix'></div>
         <div class='navbar-collapse collapse'>
@@ -17,29 +17,33 @@
                         <span class='glyphicon glyphicon-home'></span> Home
                     </a>
                 </li>
-                <li [routerLinkActive]="['link-active']">
-                    <a [routerLink]="['/counter']">
-                        <span class='glyphicon glyphicon-education'></span> Counter
+                <li [routerLinkActive]="['link-active']" *ngIf="authService.loggedIn()">
+                    <a [routerLink]="['/taxiorders']">
+                        <span class='glyphicon glyphicon-briefcase'></span> Заказы
                     </a>
                 </li>
-                <li [routerLinkActive]="['link-active']">
-                    <a [routerLink]="['/fetch-data']">
-                        <span class='glyphicon glyphicon-th-list'></span> Fetch data
+                <li [routerLinkActive]="['link-active']" *ngIf="authService.loggedIn()">
+                    <a [routerLink]="['/offers']">
+                        <span class='glyphicon glyphicon-road'></span> Предложения
                     </a>
                 </li>
-                <li [routerLinkActive]="['link-active']">
-                    <a [routerLink]="['/hello']">
-                        <span class='glyphicon glyphicon-user'></span> Hello
-                    </a>
+                <li [routerLinkActive]="['link-active']" *ngIf="authService.loggedIn()">
+                        <a [routerLink]="['/notifications']"><span class="glyphicon glyphicon-envelope"></span>Уведомления [{{nsLength}}]
+                            <a (click)="getNumNotifications()">
+                                <span class=" glyphicon glyphicon-refresh" >
+                                </span> 
+                            </a>
+                        </a>
                 </li>
                 <li>
                     <!-- We'll show the login link if the user is not currently logged in -->
-                    <a (click)=authService.login() *ngIf="!authService.loggedIn()">Log In</a>
+                    <a (click)=login() *ngIf="!authService.loggedIn()">Log In</a>
                 </li>
                 <li>
                     <!-- On the other hand, if the user is logged in, we'll show a log out link -->
                     <a (click)=authService.logout() *ngIf="authService.loggedIn()">Log Out</a>
                 </li>
+                
                 
             </ul>           
         </div>

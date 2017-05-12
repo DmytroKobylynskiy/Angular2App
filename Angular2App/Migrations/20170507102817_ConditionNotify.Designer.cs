@@ -8,9 +8,10 @@ using Angular2App.Data;
 namespace Angular2App.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170507102817_ConditionNotify")]
+    partial class ConditionNotify
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.0.0-rtm-21431")
@@ -96,8 +97,6 @@ namespace Angular2App.Migrations
 
                     b.Property<string>("NotificationStatus");
 
-                    b.Property<string>("NotificationTitle");
-
                     b.Property<int>("OrderId");
 
                     b.Property<string>("OrderOwnerId");
@@ -109,24 +108,6 @@ namespace Angular2App.Migrations
                     b.HasKey("NotificationId");
 
                     b.ToTable("NotificationsOrder");
-                });
-
-            modelBuilder.Entity("Angular2App.Models.RequestRole", b =>
-                {
-                    b.Property<int>("RequestId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("DriverLicense");
-
-                    b.Property<string>("NewRole");
-
-                    b.Property<string>("RequestOwnerId");
-
-                    b.Property<string>("RequestStatus");
-
-                    b.HasKey("RequestId");
-
-                    b.ToTable("RequestsChangeRole");
                 });
 
             modelBuilder.Entity("Angular2App.Models.TaxiOffer", b =>

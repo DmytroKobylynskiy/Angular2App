@@ -1,20 +1,44 @@
-<button (click)="getTaxiOrder()" class="btn btn-default" data-toggle="tooltip" title="Подробнее" data-placement="top"  ><span class="glyphicon glyphicon-info-sign"></span></button>
-<table *ngIf="taxiOrders">
-    <tr *ngFor="let item of taxiOrders; let i = index">{{item.startPoint}}<div *ngIf="item.condition">{{item}}<br><br><br><br><br><br></div>
-        <td>
-        <div class="btn-group">
-            <button class="btn btn-default" data-toggle="tooltip" title="Подробнее" data-placement="top"  (click)="onSelect(item)"><span class="glyphicon glyphicon-info-sign"></span></button>
-            <button class="btn btn-default" data-toggle="tooltip" title="Изменить" data-placement="top"   ><span class="glyphicon glyphicon-pencil"></span></button>
-            <button class="btn btn-default" data-toggle="tooltip" title="Удалить" data-placement="top"   ><span class="glyphicon glyphicon-remove"></span> </button>
-            <button class="btn btn-default"  data-toggle="tooltip" title="Принять" data-placement="top"  ><span class="glyphicon glyphicon-ok"></span></button>
-            <button class="btn btn-default" data-toggle="tooltip" title="Принять" data-placement="top"   ><span class="glyphicon glyphicon-ok"></span> </button>
-        </div> 
-        </td>
-    </tr>
-<table>
-
-
-
-
-
-
+<div>
+    <h3>Список заказов</h3> 
+    <span *ngIf="isCarrier">Не нашли подходящего? Создайте свое предложение </span><button *ngIf="isCarrier" class="btn btn-default" 
+    [routerLink]="['/createOffer']"><span class="glyphicon glyphicon-plus"></span></button>
+    <table class="container" *ngIf="authorized">
+            <tbody *ngIf="taxiOrders">
+                <tr *ngFor="let item of taxiOrders; let i = index">
+                    <td>{{i}}.{{item.startPoint}}
+                        <div *ngIf="item.condition">
+                            <b>Откуда:</b> {{item.startPoint}}<br>
+                            <b>Куда:</b>{{item.endPoint}}<br>
+                            <b>Дата:</b>{{item.date}}<br>
+                            <b>Время:</b>{{item.time}}<br>
+                            <b>Имя:</b>{{item.passengerName}}<br><br>
+                        </div>
+                        <div *ngIf="item.conditionAgree">
+                            <form #myForm="ngForm" novalidate>
+                                <div class="form-group">
+                                    <label>Орієнтовна дата виконання</label>
+                                    <input name="date"  class="form-control" type = "date" [ngModel]="expectedDate"/>
+                                </div>
+                                <div class="form-group">
+                                    <label>Орієнтовний час виконання</label>
+                                    <input name="time"  class="form-control" type = "time" [ngModel]="expectedTime"/>
+                                </div>
+                                <div *ngIf="valid">
+                                    <label>Невірна дата/час</label>
+                                </div>
+                                <button *ngIf="isCarrier" class="btn btn-default"  data-toggle="tooltip" title="Принять" data-placement="top" (click)="onAgreed(myForm,item)" ><span class="glyphicon glyphicon-check"></span></button>
+                            </form>
+                        </div>
+                    </td>
+                    <td class="mystyle">
+                        <div class="btn-group">
+                            <button class="btn btn-default" data-toggle="tooltip" title="Подробнее" data-placement="top"  (click)="onSelect(i)"><span class="glyphicon glyphicon-info-sign"></span></button>
+                            <button *ngIf="isAdmin" class="btn btn-default" data-toggle="tooltip" title="Изменить" data-placement="top"   (click)="onEdit(item)"><span class="glyphicon glyphicon-pencil"></span></button>
+                            <button *ngIf="isAdmin" class="btn btn-default" data-toggle="tooltip" title="Удалить" data-placement="top"   (click)="onDelete(item)"><span class="glyphicon glyphicon-remove"></span> </button>
+                            <button *ngIf="isCarrier" class="btn btn-default"  data-toggle="tooltip" title="Принять" data-placement="top" (click)="onAgree(i)" ><span class="glyphicon glyphicon-ok"></span></button>
+                        </div> 
+                    </td>
+                </tr>
+            </tbody>
+    </table>
+</div>
