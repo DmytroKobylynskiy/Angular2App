@@ -32,7 +32,7 @@ namespace Angular2App.Controllers
                 List<NotificationOrder> ns = new List<NotificationOrder>() ; 
                 using(db){
                     var notifications = from n in db.NotificationsOrder
-                                        where n.OrderOwnerId == ownerId || n.ReceiverId == ownerId
+                                        where (n.OrderOwnerId == ownerId || n.ReceiverId == ownerId)&&n.NotificationStatus=="Free"
                                         select n;
                     foreach (var notification in notifications)
                     {
@@ -57,9 +57,13 @@ namespace Angular2App.Controllers
                 List<NotificationOrder> ns = new List<NotificationOrder>() ; 
                 using(db){
                     var notifications = from n in db.NotificationsOrder
-                                        where n.OrderOwnerId == ownerId
+                                        where (n.OrderOwnerId == ownerId || n.ReceiverId == ownerId)&&n.NotificationStatus=="Free"
                                         select n;
-                    return Json(notifications.Count(),new JsonSerializerSettings
+                    foreach (var notification in notifications)
+                    {
+                            ns.Add(notification);
+                    }
+                    return Json(ns.Count(),new JsonSerializerSettings
                             {
                                 ContractResolver = new CamelCasePropertyNamesContractResolver()
                             });
@@ -71,15 +75,17 @@ namespace Angular2App.Controllers
         [HttpGet("[action]")]
         [HttpGet("{id}")]
         [HttpGet("{Status}")]
-        public async Task<IActionResult> SetNotificationStatusRead(int id,string status)
+        public async Task<IActionResult> SetNotificationStatus(int id,string status)
         {   
             
             if (id != null)
             {
                 NotificationOrder notification = await db.NotificationsOrder.FirstOrDefaultAsync(n => n.NotificationId == id);
+                notification.NotificationStatus = status;
                 db.NotificationsOrder.Update(notification);
                 await db.SaveChangesAsync();
-                return Json(notification,new JsonSerializerSettings
+                List<NotificationOrder> ns = await db.NotificationsOrder.ToListAsync();
+                return Json(ns,new JsonSerializerSettings
                             {
                                 ContractResolver = new CamelCasePropertyNamesContractResolver()
                             });

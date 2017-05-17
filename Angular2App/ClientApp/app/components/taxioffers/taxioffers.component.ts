@@ -51,6 +51,7 @@ export class TaxiOffersComponent {
                 case "customer" : this.isUser=true; break;
                 case "admin" : this.isAdmin = true; break;
             }
+            console.log(this.isUser);
        }else{
             this.router.navigate(['home']);
         }   
@@ -80,7 +81,7 @@ export class TaxiOffersComponent {
     }
 
     public onAgree(item){
-        console.log(item.offerOwnerId);
+        console.log(item);
         this.router.navigate(['createTaxiOrder', item.offerOwnerId]);
     }
     

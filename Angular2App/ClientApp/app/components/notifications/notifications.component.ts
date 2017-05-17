@@ -23,6 +23,7 @@ export class NotificationsComponent {
     public notification : NotificationOrder;
     public taxiOffer : TaxiOffer;
     public isCarrier : boolean;
+    public isUser : boolean;
     public str : string;
     public done : boolean ;
     private selectedId: number;
@@ -44,7 +45,7 @@ export class NotificationsComponent {
                 (error) => console.log("error")
             );
             }else{
-                this.isCarrier = false;
+                this.isUser = true;
                 let params: URLSearchParams = new URLSearchParams();
                 params.set('ownerId', this.authService.userProfile.user_id);
                 this.http.get('api/notification/getnotificationsorder', {
@@ -57,6 +58,39 @@ export class NotificationsComponent {
        }else{
             this.router.navigate(['home']);
         }   
+    }
+
+    public onOk(item){
+         let params: URLSearchParams = new URLSearchParams();
+            params.set('id', this.notifications[item].notificationId);
+            params.set('status',"OK");
+            this.http.get('api/notification/SetNotificationStatus', {
+                    search: params
+                }).subscribe(
+                (response) => {this.notifications=response.json()}, 
+                (error) => console.log("error")
+            );
+    }
+
+    public onReject(item){
+         let params: URLSearchParams = new URLSearchParams();
+            params.set('id', this.notifications[item].notificationId);
+            params.set('status', "Rejected");
+            this.http.get('api/notification/SetNotificationStatus', {
+                    search: params
+                }).subscribe(
+                (response) => {
+                    let params: URLSearchParams = new URLSearchParams();
+                    params.set('ownerId', this.authService.userProfile.user_id);
+                    this.http.get('api/notification/getnotificationsorder', {
+                        search: params
+                    }).subscribe(
+                    (response) => {this.notifications=response.json();this.done=true}, 
+                    (error) => console.log("error")
+                );
+            }, 
+                (error) => console.log("error")
+            );
     }
 
     public onSelect(item) {
@@ -76,10 +110,6 @@ export class NotificationsComponent {
         }
     }
 
-    public onReject(item){
-
-    }
-
     public onAgree(item){
         this.notifications[item].conditionAgree=!this.notifications[item].conditionAgree;
     }
@@ -88,6 +118,8 @@ export class NotificationsComponent {
         let params1: URLSearchParams = new URLSearchParams();
             params1.set('receiverId',this.notifications[item].receiverId);
             console.log(this.notifications[item].receiverId);
+        let params2: URLSearchParams = new URLSearchParams();
+            params2.set('id',this.notifications[item].notificationId);    
         let params: URLSearchParams = new URLSearchParams();
             params.set('id', this.notifications[item].orderId);
             params.set('duration',form.value.duration);
@@ -101,13 +133,26 @@ export class NotificationsComponent {
                     this.http.get('api/order/confirmTaxiOrder', {
                             search: params
                         }).subscribe(
-                            (response) => {this.price=response.json();}, 
-                            (error) => console.log("error")
-                        );
+                            (response) => {this.price=response.json();
+                            params2.set('status',"Agreed");
+                            this.http.get('api/notification/SetNotificationStatus', {
+                                    search: params2
+                                }).subscribe(
+                                (response) => {
+                                    this.http.get('api/notification/getnotificationsorder', {
+                                            search: params
+                                        }).subscribe(
+                                        (response) => {this.notifications=response.json();this.done=true}, 
+                                        (error) => console.log("error")
+                                    ); 
+                                }, 
+                                (error) => console.log("error")
+                            );
                     }, 
                 (error) => console.log("error")
             );
-            
+        },
+        (error) => console.log("error")); 
     }
 }
 

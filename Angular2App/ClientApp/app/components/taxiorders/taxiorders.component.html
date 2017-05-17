@@ -26,6 +26,9 @@
                                 <div *ngIf="valid">
                                     <label>Невірна дата/час</label>
                                 </div>
+                                <div *ngIf="price">
+                                    <label> Цена поездки : {{price}}</label>
+                                </div>
                                 <button *ngIf="isCarrier" class="btn btn-default"  data-toggle="tooltip" title="Принять" data-placement="top" (click)="onAgreed(myForm,item)" ><span class="glyphicon glyphicon-check"></span></button>
                             </form>
                         </div>

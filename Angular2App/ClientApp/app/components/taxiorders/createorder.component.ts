@@ -21,6 +21,9 @@ export class CreateOrderComponent {
     public start : string;
     public end : string;
     public str : string;
+    public date : string;
+    public time : string;
+    public name : string;
     public strStr : string;
     public strEnd : string;
     public done : boolean ;
@@ -56,11 +59,12 @@ export class CreateOrderComponent {
             }).subscribe(res => {
                 this.end = res.results[0].formatted_address;
                 form.value.endPoint = this.mapsService.getEndPos() + "|" + this.end;
-                
-                //console.log(this.end);
                 console.log(form.value.startPoint +" " + form.value.endPoint); 
                 form.value.orderOwnerId=this.auth.userProfile.user_id;
-                console.log(form.value.orderOwnerId);
+                form.value.date = this.date;
+                form.value.time = this.time;
+                form.value.passengerName = this.name;
+                console.log(form.value);
                 this.httpService.postData(form)
                     .subscribe((data) => {this.str=data; this.done=true;});
             });

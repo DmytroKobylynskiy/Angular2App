@@ -31,7 +31,7 @@ export class NavMenuComponent {
         if(this.authService.loggedIn()){
             let params: URLSearchParams = new URLSearchParams();
             params.set('ownerId', this.authService.userProfile.user_id);
-            this.http.get('api/order/getNumNotificationsOrder', {
+            this.http.get('api/notification/getNumNotificationsOrder', {
                 search: params
             }).subscribe(
             (response) => {this.nsLength = response.json();this.done=true}, 
@@ -44,7 +44,7 @@ export class NavMenuComponent {
         if(this.authService.loggedIn()){
             let params: URLSearchParams = new URLSearchParams();
             params.set('ownerId', this.authService.userProfile.user_id);
-            this.http.get('api/order/getNotificationsOrder', {
+            this.http.get('api/notification/getNotificationsOrder', {
                 search: params
             }).subscribe(
             (response) => {this.notifications = response.json();this.nsLength=this.notifications.length;this.done=true}, 

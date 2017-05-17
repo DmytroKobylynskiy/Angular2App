@@ -47,7 +47,7 @@ export class CreateOfferComponent {
                 form.value.offerOwnerId = this.auth.userProfile.user_id;
                 console.log(form.value.place);
                 this.httpService.postOffer(form)
-                    .subscribe((data) => {this.str=data; this.done=true;});
+                    .subscribe((data) => {this.router.navigate(['offers']);this.done=true;});
             });
         }else{
             this.router.navigate(['home']);

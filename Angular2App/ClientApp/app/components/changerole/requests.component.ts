@@ -69,10 +69,14 @@ export class RequestsComponent {
                             .patch('https://' + myConfig.domain + '/api/v2/users/' + request.requestOwnerId, data)
                             .map(response => response.json())
                             .subscribe(
-                                response => {
-                                    console.log(response);
-                                },
-                                error => alert(error.json().message)
+                                 response => {
+                                     if(request.requestOwnerId==this.auth.userProfile.user_id){
+                                        this.auth.userProfile = response;
+                                        localStorage.setItem('profile', JSON.stringify(response));
+                                        this.router.navigate(['/profile']);
+                                     }
+                                    },
+                                    error => alert(error.json().message)
                             );
                             this.done=true}, 
             (error) => console.log("error")

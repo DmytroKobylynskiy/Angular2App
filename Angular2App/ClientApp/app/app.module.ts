@@ -15,11 +15,9 @@ import { TaxiOffersComponent} from './components/taxioffers/taxioffers.component
 import { EditOrderComponent }  from './components/taxiorders/editorder.component';
 import { EditOfferComponent }  from './components/taxioffers/editoffer.component';
 import { HttpModule, Http, RequestOptions } from '@angular/http';
-import { SimpleNotificationsModule } from 'angular2-notifications';
 import { provideAuth, AuthHttp, AuthConfig,AuthModule, AuthConfigConsts } from 'angular2-jwt';
 import { CommonModule } from '@angular/common';  
 import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Ng2MapModule } from 'ng2-map';
 import { MapsService } from "./components/services/maps.service";
 import { ModalModule } from 'angular2-modal';
@@ -67,7 +65,6 @@ const taxiOfferRoutes: Routes = [
         HttpModule,
         CommonModule,
         BrowserModule,
-        SimpleNotificationsModule.forRoot(),
         ModalModule.forRoot(),
         BootstrapModalModule,
         RouterModule.forChild(taxiOrderRoutes),

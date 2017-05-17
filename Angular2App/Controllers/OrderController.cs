@@ -35,7 +35,16 @@ namespace Angular2App.Controllers
         {
             
             List<TaxiOrder> taxiOrders = await db.TaxiOrders.ToListAsync();
-            List<TaxiOrder> taxi = taxiOrders;
+            List<TaxiOrder> taxi = new List<TaxiOrder>();
+            using(db){
+                    var taxis = from n in db.TaxiOrders
+                                        where n.OrderStatus=="Free"
+                                        select n;
+                    foreach (var notification in taxis)
+                    {
+                            taxi.Add(notification);
+                    }
+                }
             for (int i = 0; i < taxi.Count; i++)
             {
                 if(taxiOrders[i].StartPoint.IndexOf('|')>0){
@@ -136,12 +145,21 @@ namespace Angular2App.Controllers
 
            // var user = await GetCurrentUserAsync();
            // var userId = user?.Id;
-           // taxiOrder.OrderOwnerId = userId;
-           _logger.LogInformation("ads"+taxiOrder.ReceiverId+"adas");
+           // taxiOrder.OrderOwnerId = userId
+           List<TaxiOrder> allOrders = await db.TaxiOrders.ToListAsync();
            if(taxiOrder.ReceiverId==null){
                taxiOrder.OrderStatus = "Free";
            }else{
                taxiOrder.OrderStatus = "In progress";
+               NotificationOrder notificationOrder = new NotificationOrder();
+               notificationOrder.OrderOwnerId = taxiOrder.OrderOwnerId;
+                    notificationOrder.ReceiverId = taxiOrder.ReceiverId;
+                    notificationOrder.OrderId = allOrders[allOrders.Count-1].Id+1;
+                    _logger.LogInformation("dasdasdasdasdsad" + "dasd");
+                    notificationOrder.OrderStatus = taxiOrder.OrderStatus;
+                    notificationOrder.NotificationStatus = "Free";
+                    notificationOrder.NotificationTitle = "Заказ " + notificationOrder.OrderId + " был принят. " ;
+                db.NotificationsOrder.Add(notificationOrder);
            }
             db.TaxiOrders.Add(taxiOrder);
             await db.SaveChangesAsync();
@@ -259,7 +277,7 @@ namespace Angular2App.Controllers
                     notificationOrder.OrderId = taxiOrder.Id;
                     notificationOrder.OrderStatus = taxiOrder.OrderStatus;
                     notificationOrder.NotificationStatus = "Free";
-                    notificationOrder.NotificationTitle = "Заказ " + id + "был принят. " ;
+                    notificationOrder.NotificationTitle = "Заказ " + id + " был принят. " ;
                     db.NotificationsOrder.Add(notificationOrder);
                     await db.SaveChangesAsync();
                     return Json(taxiOrder,new JsonSerializerSettings
@@ -344,9 +362,12 @@ namespace Angular2App.Controllers
         [HttpGet("{price}")]
         public async Task<IActionResult> ConfirmTaxiOrder(int id, float duration, float distanse,float price)
         {
+            List<TaxiOrder> taxi = await db.TaxiOrders.ToListAsync();
             if (id != null)
             {
+                _logger.LogInformation("adssad"+id);
                 TaxiOrder taxiOrder = await db.TaxiOrders.FirstOrDefaultAsync(p => p.Id == id);
+                
                 if (taxiOrder != null)
                 {
                     
@@ -362,7 +383,10 @@ namespace Angular2App.Controllers
                     });
                 }
             }
-            return NotFound();
+            return Json(taxi,new JsonSerializerSettings
+                    {
+                        ContractResolver = new CamelCasePropertyNamesContractResolver()
+                    });
         }
 /*
         public async Task<IActionResult> ConfirmTaxiOrder(int? id)
