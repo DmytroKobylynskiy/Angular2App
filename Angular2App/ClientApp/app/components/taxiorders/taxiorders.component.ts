@@ -12,10 +12,14 @@ import { Component, ViewContainerRef } from '@angular/core';
 import { Overlay } from 'angular2-modal';
 import { Modal } from 'angular2-modal/plugins/bootstrap';
 import { AdditionCalculateWindow, AdditionCalculateWindowData } from "./modal";
+import { NotificationService } from "../services/notification.service";
+import { AuthHttp } from "angular2-jwt/angular2-jwt";
+import { myConfig } from "../auth.config";
+import { OffersService } from "../services/offers.service";
 @Component({
     selector: 'angular2app',
     template: require('./taxiorders.component.html'),
-    providers: [HttpService,Auth1Service],
+    providers: [HttpService,Auth1Service,NotificationService,OffersService],
     styles: [require('./taxiorders.component.css')]
 })
 
@@ -31,8 +35,10 @@ export class TaxiOrdersComponent {
     private isCarrier : boolean = false;
     private isUser : boolean = false;
     private valid : boolean;
-    constructor(private auth: Auth1Service,private http: Http,private httpService: HttpService,private route: ActivatedRoute,
-        private router: Router,private authService: Auth1Service,overlay: Overlay, vcRef: ViewContainerRef, public modal: Modal) {
+    public order : string;
+    reverse: boolean = false;
+    constructor(private notificationService:NotificationService,private auth: Auth1Service,private http: Http,private httpService: HttpService,private route: ActivatedRoute,
+        private router: Router,private authService: Auth1Service,overlay: Overlay, vcRef: ViewContainerRef, public modal: Modal,private authHttp: AuthHttp) {
             overlay.defaultViewContainer = vcRef;
             this.authorized=this.auth.loggedIn();
     }
@@ -48,9 +54,11 @@ export class TaxiOrdersComponent {
         if(this.auth.loggedIn()){
             this.http.get('/api/order/taxiorders').subscribe(result => {
                 this.taxiOrders = result.json();
+                console.log(this.taxiOrders);
             });
+            
         
-        this.taxiOrdersId = this.route.params.switchMap((params: Params) => {
+            this.taxiOrdersId = this.route.params.switchMap((params: Params) => {
                 this.selectedId = +params['id'];
                 console.log("ddsd"+this.selectedId);
                 return this.taxiOrders;
@@ -92,6 +100,14 @@ export class TaxiOrdersComponent {
         console.log(item);
         this.taxiOrders[item].conditionAgree=!this.taxiOrders[item].conditionAgree;
     }
+
+    setOrder(value: string) {
+        if (this.order === value) {
+            this.reverse = !this.reverse;
+        }
+        this.order = value;
+    }
+
     public onAgreed(form: NgForm,item) {
         var displayDate = new Date().getFullYear().toString();
         var displayTime = new Date().getHours().toString()+":"+new Date().getMinutes().toString();
@@ -124,16 +140,34 @@ export class TaxiOrdersComponent {
         this.valid = displayDate>form.value.date;
         console.log(this.valid);
         if(this.valid==false){
-            console.log("sdseq312");
             let params: URLSearchParams = new URLSearchParams();
             params.set('id', item.id);
             params.set('receiverId',this.authService.userProfile.user_id);
+            params.set('receiverEmail',this.authService.userProfile.email);
             console.log(item.id);
             this.http.get('api/order/agreetaxiorder', {
                 search: params
             }).subscribe(
-                (response) => {this.taxiOrder = response.json();this.done=true;console.log(this.taxiOrder);}, 
+                (response) => {this.taxiOrder = response.json();this.done=true;this.notificationService.getNumNotifications(this.auth.userProfile.user_id);}, 
                 (error) => console.log("error")
+            );
+            var data = JSON.stringify({
+                                user_metadata: {
+                                    busyDate: displayDate,
+                                    busyTime : displayTime
+                                }
+                            });
+            this.authHttp
+            .patch('https://' + myConfig.domain + '/api/v2/users/' + this.authService.userProfile.user_id, data)
+            .map(response => response.json())
+            .subscribe(
+                    response => {
+                        this.auth.userProfile = response;
+                        localStorage.setItem('profile', JSON.stringify(response));
+                        this.router.navigate(['/profile']);
+                        
+                    },
+                    error => alert(error.json().message)
             );
         }
     }

@@ -1,16 +1,6 @@
-FROM microsoft/dotnet:latest
-
-RUN apt-get update
-RUN apt-get install -y build-essential nodejs nodejs-legacy
-
+FROM microsoft/dotnet:1.0.0-core
 WORKDIR /app
-
-COPY project.json .
-RUN ["dotnet", "restore"]
-
+ENV ASPNETCORE_URLS http://*:8090
+EXPOSE 8090
+ENTRYPOINT ["dotnet", "Angular2App.dll"]
 COPY . /app
-RUN ["dotnet", "build"]
-
-EXPOSE 5000/tcp
-
-ENTRYPOINT ["dotnet", "run", "--server.urls", "http://0.0.0.0:5000"]

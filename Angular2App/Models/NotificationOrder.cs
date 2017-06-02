@@ -14,7 +14,11 @@ namespace Angular2App.Models
 
         public string ReceiverId { get; set; }
 
+        public string ReceiverEmail {get;set;}
+
         public string OrderOwnerId { get; set; }
+
+        public string OrderOwnerEmail{get;set;}
 
         public string OrderStatus {get;set;}
 

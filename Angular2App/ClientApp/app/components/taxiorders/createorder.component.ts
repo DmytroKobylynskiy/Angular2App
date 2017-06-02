@@ -8,11 +8,12 @@ import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import './taxiorders';
 import { Auth1Service } from "../services/auth1.service";
+import { OffersService } from "../services/offers.service";
 
 @Component({
     selector: 'angular2app',
     template: require('./createorder.component.html'),
-    providers: [HttpService,MapsService,Auth1Service]
+    providers: [HttpService,MapsService,Auth1Service,OffersService]
 })
 
 export class CreateOrderComponent {
@@ -61,9 +62,9 @@ export class CreateOrderComponent {
                 form.value.endPoint = this.mapsService.getEndPos() + "|" + this.end;
                 console.log(form.value.startPoint +" " + form.value.endPoint); 
                 form.value.orderOwnerId=this.auth.userProfile.user_id;
+                form.value.orderOwnerEmail=this.auth.userProfile.email;
                 form.value.date = this.date;
                 form.value.time = this.time;
-                form.value.passengerName = this.name;
                 console.log(form.value);
                 this.httpService.postData(form)
                     .subscribe((data) => {this.str=data; this.done=true;});

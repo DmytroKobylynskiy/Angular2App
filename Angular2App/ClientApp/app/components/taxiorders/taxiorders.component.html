@@ -2,9 +2,26 @@
     <h3>Список заказов</h3> 
     <span *ngIf="isCarrier">Не нашли подходящего? Создайте свое предложение </span><button *ngIf="isCarrier" class="btn btn-default" 
     [routerLink]="['/createOffer']"><span class="glyphicon glyphicon-plus"></span></button>
+    <div class="loader" *ngIf="!taxiOrders"></div>
     <table class="container" *ngIf="authorized">
             <tbody *ngIf="taxiOrders">
-                <tr *ngFor="let item of taxiOrders; let i = index">
+                <tr>
+                    <th
+                        (click)="setOrder('startPoint')"
+                        class="mdl-data-table__cell--non-numeric"
+                    >
+                        Откуда <span [hidden]="reverse"></span><span [hidden]="!reverse"></span>
+                    </th>
+                    <th
+                        (click)="setOrder('date')"
+                    >
+                        Дата <span [hidden]="reverse"></span><span [hidden]="!reverse"></span>
+                    </th>
+
+                    <th> Действие </th>
+                </tr>
+
+                <tr *ngFor="let item of taxiOrders | orderBy: order; let i = index">
                     <td>{{i}}.{{item.startPoint}}
                         <div *ngIf="item.condition">
                             <b>Откуда:</b> {{item.startPoint}}<br>
@@ -33,6 +50,11 @@
                             </form>
                         </div>
                     </td>
+                        
+                    <td>
+                        {{item.date}}
+                    </td>
+
                     <td class="mystyle">
                         <div class="btn-group">
                             <button class="btn btn-default" data-toggle="tooltip" title="Подробнее" data-placement="top"  (click)="onSelect(i)"><span class="glyphicon glyphicon-info-sign"></span></button>

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+  <body>
+    <div  class="container">
+        <div class="row">
+            <div class="col-xs-12 col-sm-6 col-md-6">
+                <div class="well well-sm">
+                    <div class="row">
+                        <div class="col-sm-6 col-md-4">
+                            <img src="{{picture}}" alt="" class="img-rounded img-responsive" />
+                        </div>
+                        <div class="col-sm-6 col-md-8">
+                            <h4>{{name}}</h4>
+                            <p>
+                                <i class="glyphicon glyphicon-envelope"></i>{{email}}
+                                <br />
+                                <br />
+                                <i class="glyphicon glyphicon-gift"></i><span *ngIf="isUser">Клиент</span>
+								<span *ngIf="isCarrier">Водитель</span>
+								<button  class="btn btn-default" data-toggle="tooltip" title="Изменить роль" data-placement="top"   
+								(click)="changeRole()"><span class="glyphicon glyphicon-pencil"></span></button>
+							</p>
+							<form   #myForm="ngForm" novalidate *ngIf="changeRoleFlag">
+								<div class="form-group">
+									<label>Водительские права</label>
+									<input type="text" class="form-control" name="driverLicense" [(ngModel)]="driverLicense" />
+								</div>        
+									<input type="radio" [ngModel]="roleUser" 
+									(ngModelChange)="roleUser = 'customer'"  name="roleUser" value="customer">Заказчик<br>
+									<input type="radio" [ngModel]="roleUser"  
+									(ngModelChange)="roleUser = 'carrier'" name="roleUser" value="carrier">Перевозчик
+								<div class="form-group">
+									<button class="btn btn-default" (click)="onSubmit(myForm)">Изменить</button>
+								</div>
+							</form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+			<div class="row">
+				<div class="col-sm-4">
+					<div class="rating-block">
+						<h4>Average user rating</h4>
+						<h2 class="bold padding-bottom-7">4.3 <small>/ 5</small></h2>
+						<button type="button" class="btn btn-warning btn-sm" aria-label="Left Align">
+							<span class="glyphicon glyphicon-star" aria-hidden="true"></span>
+						</button>
+						<button type="button" class="btn btn-warning btn-sm" aria-label="Left Align">
+							<span class="glyphicon glyphicon-star" aria-hidden="true"></span>
+						</button>
+						<button type="button" class="btn btn-warning btn-sm" aria-label="Left Align">
+							<span class="glyphicon glyphicon-star" aria-hidden="true"></span>
+						</button>
+						<button type="button" class="btn btn-default btn-grey btn-sm" aria-label="Left Align">
+							<span class="glyphicon glyphicon-star" aria-hidden="true"></span>
+						</button>
+						<button type="button" class="btn btn-default btn-grey btn-sm" aria-label="Left Align">
+							<span class="glyphicon glyphicon-star" aria-hidden="true"></span>
+						</button>
+					</div>
+				</div>
+			</div>
+			=
+		<h1 *ngIf="isUser">Ваши заказы</h1>
+		<h1 *ngIf="isCarrier">Ваши предложения</h1>
+		
+		<div *ngIf="isUser">
+			<div class="loader" *ngIf="!done"></div>	
+			<table class="container" >
+				<tbody *ngIf="done">
+					<tr>
+						<th class="mdl-data-table__cell--non-numeric">
+							Откуда <span [hidden]="reverse"></span><span [hidden]="!reverse"></span>
+						</th>
+						<th class="mdl-data-table__cell--non-numeric">
+							Статус <span [hidden]="reverse"></span><span [hidden]="!reverse"></span>
+						</th>
+						<th>
+							Дата <span [hidden]="reverse"></span><span [hidden]="!reverse"></span>
+						</th>
+						<th> Действие </th>
+					</tr>
+
+					<tr *ngFor="let item of myOrders; let i = index">
+						<td>{{item.startPoint}}
+							<div *ngIf="item.condition">
+								<b>Откуда:</b> {{item.startPoint}}<br>
+								<b>Куда:</b>{{item.endPoint}}<br>
+								<b>Дата:</b>{{item.date}}<br>
+								<b>Время:</b>{{item.time}}<br>
+								<b>Имя:</b>{{item.passengerName}}<br><br>
+							</div>
+						</td>
+						<td class="mystyle">
+								{{item.orderStatus}}
+						</td>
+						<td class="mystyle">
+								{{item.date}}
+						</td>
+						<td class="mystyle">
+							<div class="btn-group">
+									<button class="btn btn-default" data-toggle="tooltip" title="Подробнее" data-placement="top"  (click)="onSelect(i)"><span class="glyphicon glyphicon-info-sign"></span></button>
+									<button class="btn btn-default" data-toggle="tooltip" title="Изменить" data-placement="top"   (click)="onEdit(item)"><span class="glyphicon glyphicon-pencil"></span></button>
+									<button class="btn btn-default" data-toggle="tooltip" title="Удалить" data-placement="top"   (click)="orderService.onDelete(item)"><span class="glyphicon glyphicon-remove"></span> </button>
+							</div>
+						</td>
+                	</tr>
+            	</tbody>
+    		</table>
+		</div>
+		<div *ngIf="isCarrier">
+			<div class="loader" *ngIf="!done"></div>
+			<div>	
+				<table class="container" *ngIf="done">
+				<tbody>
+					<tr>
+						<th	
+							class="mdl-data-table__cell--non-numeric"
+						>
+							Местоположение <span [hidden]="reverse"></span><span [hidden]="!reverse"></span>
+						</th>
+						<th>
+							Цена <span [hidden]="reverse"></span><span [hidden]="!reverse"></span>
+						</th>
+
+						<th> Действие </th>
+					</tr>
+					<tr *ngFor="let item of myOrders | orderBy: order ; let i = index">
+						<td>{{item.place}}
+							<div *ngIf="item.condition">
+								<b>Местоположение:</b> {{item.place}}<br>
+								<b>Машина:</b>{{item.auto}}<br>
+								<b>Електронная почта:</b>{{item.offerOwnerEmail}}<br><br>
+							</div>
+						</td>
+						<td class="mystyle-price">{{item.price}}</td>
+						<td class="mystyle">
+							<div class="btn-group">
+								<button class="btn btn-default" data-toggle="tooltip" title="Подробнее" data-placement="top"  (click)="onSelect(i)"><span class="glyphicon glyphicon-info-sign"></span></button>
+								<button  class="btn btn-default" data-toggle="tooltip" title="Изменить" data-placement="top"   (click)="onEdit(item)"><span class="glyphicon glyphicon-pencil"></span></button>
+								<button  class="btn btn-default" data-toggle="tooltip" title="Удалить" data-placement="top"   (click)="offersService.onDelete(item)"><span class="glyphicon glyphicon-remove"></span> </button>
+							</div> 
+						</td>
+					</tr>
+					
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-7">
+				<hr/>
+				<div class="review-block">
+					<div class="row">
+						<div class="col-sm-3">
+							<img src="https://dummyimage.com/60x60/666/ffffff&text=No+Image" class="img-rounded">
+							<div class="review-block-name"><a href="#">nktailor</a></div>
+							<div class="review-block-date">January 29, 2016<br/>1 day ago</div>
+						</div>
+						<div class="col-sm-9">
+							<div class="review-block-rate">
+								<button type="button" class="btn btn-warning btn-xs" aria-label="Left Align">
+								  <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
+								</button>
+								<button type="button" class="btn btn-warning btn-xs" aria-label="Left Align">
+								  <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
+								</button>
+								<button type="button" class="btn btn-warning btn-xs" aria-label="Left Align">
+								  <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
+								</button>
+								<button type="button" class="btn btn-default btn-grey btn-xs" aria-label="Left Align">
+								  <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
+								</button>
+								<button type="button" class="btn btn-default btn-grey btn-xs" aria-label="Left Align">
+								  <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
+								</button>
+							</div>
+							<div class="review-block-title">this was nice in buy</div>
+							
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+    </div>
+    </div>
+  </body>
+</html>

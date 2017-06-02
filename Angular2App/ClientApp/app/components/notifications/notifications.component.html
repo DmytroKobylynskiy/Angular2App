@@ -1,4 +1,5 @@
-
+<h3>Ваши уведомления</h3> 
+<div class="loader" *ngIf="!notifications"></div>
 <table class="container" *ngIf="notifications">
     <tbody>
         <tr *ngFor="let item of notifications; let i = index">

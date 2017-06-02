@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using Angular2App.Data;
 using Angular2App.Models;
+using Angular2App.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -44,51 +45,16 @@ namespace Angular2App.Controllers
                     {
                             taxi.Add(notification);
                     }
+                    for (int i = 0; i < taxi.Count; i++)
+                    {
+                        if(taxi[i].StartPoint.IndexOf('|')>0){
+                            taxi[i].StartPoint = taxi[i].StartPoint.Remove(0, taxi[i].StartPoint.IndexOf('|')+1);
+                        }
+                        if(taxi[i].EndPoint.IndexOf('|')>0){
+                            taxi[i].EndPoint = taxi[i].EndPoint.Remove(0, taxi[i].EndPoint.IndexOf('|')+1);
+                        }
+                    }
                 }
-            for (int i = 0; i < taxi.Count; i++)
-            {
-                if(taxiOrders[i].StartPoint.IndexOf('|')>0){
-                     taxi[i].StartPoint = taxiOrders[i].StartPoint.Remove(0, taxiOrders[i].StartPoint.IndexOf('|')+1);
-                }
-                if(taxiOrders[i].EndPoint.IndexOf('|')>0){
-                     taxi[i].EndPoint = taxiOrders[i].EndPoint.Remove(0, taxiOrders[i].EndPoint.IndexOf('|')+1);
-                }
-            }
-            _logger.LogInformation("OIKOKOEDQSSDSDASDSD");
-            /*
-            SortState.SortingState sortOrder = SortState.SortingState.StartPointAsc;
-            ViewData["StartPointSort"] = sortOrder == SortState.SortingState.StartPointAsc ? SortState.SortingState.StartPointDesc : SortState.SortingState.StartPointAsc;
-            ViewData["EndPointSort"] = sortOrder == SortState.SortingState.EndPointAsc ? SortState.SortingState.EndPointDesc : SortState.SortingState.EndPointAsc;
-            ViewData["DateSort"] = sortOrder == SortState.SortingState.DateAsc ? SortState.SortingState.DateDesc : SortState.SortingState.DateAsc;
-            ViewData["StatusSort"] = sortOrder == SortState.SortingState.StatusOrderAsc ? SortState.SortingState.StatusOrderDesc : SortState.SortingState.StatusOrderAsc;
-
-            switch (sortOrder)
-            {
-                case SortState.SortingState.StartPointDesc:
-                    taxi = taxi.OrderByDescending(s => s.StartPoint).ToList();
-                    break;
-                case SortState.SortingState.EndPointAsc:
-                    taxi = taxi.OrderBy(s => s.EndPoint).ToList();
-                    break;
-                case SortState.SortingState.EndPointDesc:
-                    taxi = taxi.OrderByDescending(s => s.EndPoint).ToList();
-                    break;
-                case SortState.SortingState.DateAsc:
-                    taxi = taxi.OrderBy(s => s.Date).ToList();
-                    break;
-                case SortState.SortingState.DateDesc:
-                    taxi = taxi.OrderByDescending(s => s.Date).ToList();
-                    break;
-                case SortState.SortingState.StatusOrderAsc:
-                    taxi = taxi.OrderBy(s => s.OrderStatus).ToList();
-                    break;
-                case SortState.SortingState.StatusOrderDesc:
-                    taxi = taxi.OrderByDescending(s => s.OrderStatus).ToList();
-                    break;
-                default:
-                    taxi = taxi.OrderBy(s => s.StartPoint).ToList();
-                    break;
-            }*/
             return Json(taxi);
         }
 
@@ -105,21 +71,31 @@ namespace Angular2App.Controllers
             }
             return Json(taxi);
         }
-/*
-        public async Task<IActionResult> MyOrders()
+
+        [HttpGet("[action]")]
+        [HttpGet("{id}")]
+        public async Task<IActionResult> MyOrders(string id)
         {
-            var user = await GetCurrentUserAsync();
-            var userId = user?.Id;
-            List<TaxiOrder> allOrders = await db.TaxiOrders.ToListAsync();
-            List<TaxiOrder> myOrders = new List<TaxiOrder>();
-            foreach (var order in allOrders)
-            {
-                if (order.OrderOwnerId == userId)
-                {
-                    myOrders.Add(order);
-                }
+            List<TaxiOrder> taxi = new List<TaxiOrder>();
+            using(db){
+                    var taxis = from n in db.TaxiOrders
+                                        where n.OrderOwnerId==id
+                                        select n;
+                    foreach (var notification in taxis)
+                    {
+                            taxi.Add(notification);
+                    }
+                    for (int i = 0; i < taxi.Count; i++)
+                    {
+                        if(taxi[i].StartPoint.IndexOf('|')>0){
+                            taxi[i].StartPoint = taxi[i].StartPoint.Remove(0, taxi[i].StartPoint.IndexOf('|')+1);
+                        }
+                        if(taxi[i].EndPoint.IndexOf('|')>0){
+                            taxi[i].EndPoint = taxi[i].EndPoint.Remove(0, taxi[i].EndPoint.IndexOf('|')+1);
+                        }
+                    }
             }
-            return View(myOrders);
+            return Json(taxi);
         }
 /* 
         public async Task<IActionResult> MyRequests()
@@ -149,22 +125,17 @@ namespace Angular2App.Controllers
            List<TaxiOrder> allOrders = await db.TaxiOrders.ToListAsync();
            if(taxiOrder.ReceiverId==null){
                taxiOrder.OrderStatus = "Free";
+                db.TaxiOrders.Add(taxiOrder);
+               await db.SaveChangesAsync();
            }else{
                taxiOrder.OrderStatus = "In progress";
-               NotificationOrder notificationOrder = new NotificationOrder();
-               notificationOrder.OrderOwnerId = taxiOrder.OrderOwnerId;
-                    notificationOrder.ReceiverId = taxiOrder.ReceiverId;
-                    notificationOrder.OrderId = allOrders[allOrders.Count-1].Id+1;
-                    _logger.LogInformation("dasdasdasdasdsad" + "dasd");
-                    notificationOrder.OrderStatus = taxiOrder.OrderStatus;
-                    notificationOrder.NotificationStatus = "Free";
-                    notificationOrder.NotificationTitle = "Заказ " + notificationOrder.OrderId + " был принят. " ;
-                db.NotificationsOrder.Add(notificationOrder);
+               taxiOrder.Id=allOrders[allOrders.Count-1].Id+1;
+               db.TaxiOrders.Add(taxiOrder);
+               await CreateNotification(taxiOrder);
+               //await SendEmail(taxiOrder.Id,false);
+               await db.SaveChangesAsync();
            }
-            db.TaxiOrders.Add(taxiOrder);
-            await db.SaveChangesAsync();
-            
-            return Json(taxiOrder,new JsonSerializerSettings
+           return Json(taxiOrder,new JsonSerializerSettings
                 {
                     ContractResolver = new CamelCasePropertyNamesContractResolver()
                 });
@@ -196,7 +167,6 @@ namespace Angular2App.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> EditTaxiOrder(int? id)
         {
-            _logger.LogInformation("OKOKOKOKO"+id);
             if (id != null)
             {
                 TaxiOrder taxiOrder = await db.TaxiOrders.FirstOrDefaultAsync(p => p.Id == id);
@@ -235,7 +205,6 @@ namespace Angular2App.Controllers
         [HttpGet("{index}")]
         public async Task<IActionResult> RemoveTaxiOrder(int index)
         {   
-            _logger.LogInformation("OIKOKOEDQSSDSDASDSD"+index);
             List<TaxiOrder> taxi = await db.TaxiOrders.ToListAsync();
             if (index != null)
             {
@@ -257,12 +226,13 @@ namespace Angular2App.Controllers
                         ContractResolver = new CamelCasePropertyNamesContractResolver()
                     });
         }
+
         [HttpGet("[action]")]
         [HttpGet("{id}")]
         [HttpGet("{receiverId}")]
-        public async Task<IActionResult> AgreeTaxiOrder(int? id,string receiverId)
+        [HttpGet("{receiverEmail}")]
+        public async Task<IActionResult> AgreeTaxiOrder(int? id,string receiverId, string receiverEmail)
         {
-            _logger.LogInformation("O=OKO"+id);
             if (id != null)
             {
                 TaxiOrder taxiOrder = await db.TaxiOrders.FirstOrDefaultAsync(p => p.Id == id);
@@ -270,15 +240,10 @@ namespace Angular2App.Controllers
                 {
                     taxiOrder.OrderStatus = "In progress";
                     taxiOrder.ReceiverId = receiverId;
+                    taxiOrder.ReceiverEmail = receiverEmail;
                     db.TaxiOrders.Update(taxiOrder);
-                    NotificationOrder notificationOrder = new NotificationOrder();
-                    notificationOrder.OrderOwnerId = taxiOrder.OrderOwnerId;
-                    notificationOrder.ReceiverId = receiverId;
-                    notificationOrder.OrderId = taxiOrder.Id;
-                    notificationOrder.OrderStatus = taxiOrder.OrderStatus;
-                    notificationOrder.NotificationStatus = "Free";
-                    notificationOrder.NotificationTitle = "Заказ " + id + " был принят. " ;
-                    db.NotificationsOrder.Add(notificationOrder);
+                    await CreateNotification(taxiOrder);
+                    //await SendEmail(taxiOrder.Id,true);
                     await db.SaveChangesAsync();
                     return Json(taxiOrder,new JsonSerializerSettings
                     {
@@ -287,6 +252,34 @@ namespace Angular2App.Controllers
                 }
             }
             return NotFound();
+        }
+        
+        [HttpGet("[action]")]
+        [HttpGet("{id}")]
+        [HttpGet("{isOwner}")]
+         public async Task<IActionResult> SendEmail(int id,string isOwner){
+            NotificationOrder notificationOrder = await db.NotificationsOrder.FirstOrDefaultAsync(p => p.OrderId == id);
+            EmailService emailService = new EmailService();
+            if(isOwner=="order"){
+                await emailService.SendEmailAsync(notificationOrder.OrderOwnerEmail, notificationOrder.NotificationTitle , notificationOrder.NotificationTitle );
+            }else{
+                await emailService.SendEmailAsync(notificationOrder.ReceiverEmail, notificationOrder.NotificationTitle , notificationOrder.NotificationTitle );
+            }
+            return Ok();
+        }
+
+        public async Task CreateNotification(TaxiOrder taxiOrder){
+            NotificationOrder notificationOrder = new NotificationOrder();
+                    notificationOrder.OrderOwnerId = taxiOrder.OrderOwnerId;
+                    notificationOrder.OrderOwnerEmail = taxiOrder.OrderOwnerEmail;
+                    notificationOrder.ReceiverId = taxiOrder.ReceiverId;
+                    notificationOrder.ReceiverEmail = taxiOrder.ReceiverEmail;
+                    notificationOrder.OrderId = taxiOrder.Id;
+                    notificationOrder.OrderStatus = taxiOrder.OrderStatus;
+                    notificationOrder.NotificationStatus = "Free";
+                    notificationOrder.NotificationTitle = "Заказ " + taxiOrder.Id + " был принят. " ;
+                    db.NotificationsOrder.Add(notificationOrder);
+                    await db.SaveChangesAsync();
         }
         [HttpGet("[action]")]
         [HttpGet("{ownerId}")]

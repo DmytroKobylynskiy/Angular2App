@@ -2,11 +2,12 @@
 using System.Collections;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-
+using System.ComponentModel.DataAnnotations.Schema;
 namespace Angular2App.Models
 {
     public class TaxiOrder
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
        // [Required]
         //[RegularExpression(@"/^[a-zA-Zа-яА-Я'][a-zA-Zа-яА-Я-' ]+[a-zA-Zа-яА-Я']?$/u", ErrorMessage = "Недопустимая начальная точка")]
@@ -32,14 +33,11 @@ namespace Angular2App.Models
         public float Duration { get; set; }
        //[Required]
        // [Phone(ErrorMessage = "Недопустимый номер телефона")]
-        public string PassengerPhone { get; set; }
-       // [Required]
-        //[DisplayName]
-        //[StringLength(60, MinimumLength = 3)]
-        public string PassengerName { get; set; }
         public string OrderOwnerId { get; set; }
+        public string OrderOwnerEmail { get; set; }
         public string OrderStatus { get; set; }
         public string ReceiverId { get; set; }
+        public string ReceiverEmail{get;set;}
         
     }
 }

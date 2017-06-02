@@ -7,6 +7,7 @@ interface TaxiOffer {
     passengerPhone : string ;
     name : string;
     offerOwnerId : string;
+    offerOwnerEmail : string;
     offerStatus : string;
     condition : boolean;    
 }

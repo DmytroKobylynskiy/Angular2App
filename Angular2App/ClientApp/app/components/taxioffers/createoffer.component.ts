@@ -9,11 +9,12 @@ import 'rxjs/add/operator/catch';
 import './taxioffer';
 import { Auth1Service } from "../services/auth1.service";
 import { Router } from "@angular/router";
+import { OffersService } from "../services/offers.service";
 
 @Component({
     selector: 'angular2app',
     template: require('./createoffer.component.html'),
-    providers: [HttpService,MapsService,Auth1Service]
+    providers: [HttpService,MapsService,Auth1Service,OffersService]
 })
 
 export class CreateOfferComponent {
@@ -45,7 +46,8 @@ export class CreateOfferComponent {
                 this.start = res.results[0].formatted_address;
                 form.value.place = this.mapsService.getPos() + "|" + this.start;
                 form.value.offerOwnerId = this.auth.userProfile.user_id;
-                console.log(form.value.place);
+                form.value.offerOwnerEmail = this.auth.userProfile.email;
+                console.log(form.value);
                 this.httpService.postOffer(form)
                     .subscribe((data) => {this.router.navigate(['offers']);this.done=true;});
             });

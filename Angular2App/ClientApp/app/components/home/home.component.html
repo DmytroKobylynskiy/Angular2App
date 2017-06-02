@@ -1,8 +1,15 @@
-<div class="panel panel-info">
-    <div class="panel-heading">
-        Hello World
+<div >
+    <h3 align="center"> Приветствуем Вас!</h3>
+    <div>
+        <img class="center" src="./assets/img/client_app_icon.png">
     </div>
-    <div class="panel-body">
-        Here's some text to get us started....
+    <div *ngIf="!authService.loggedIn()">
+        <h3 align="center" >Авторизируйтесь для доступа к приложению</h3>
+        <button class="btn btn-primary center-block"  (click)=login() *ngIf="!authService.loggedIn()">Войти/Зарегистрироваться</button>
+    </div>
+    <h4 align="center"> Заказывайте поездки или предлагайте перевозки</h4>
+    <div *ngIf="authService.loggedIn()">
+        <a [routerLink]="['/createTaxiOrder']" class="order"><img src="./assets/img/people_order.png"></a>
+        <a [routerLink]="['/createOffer']" class="offer"><img src="./assets/img/car_offer.png"></a>
     </div>
 </div>

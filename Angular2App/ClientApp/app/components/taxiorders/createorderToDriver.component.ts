@@ -9,17 +9,20 @@ import 'rxjs/add/operator/catch';
 import './taxiorders';
 import { Auth1Service } from "../services/auth1.service";
 import { ActivatedRoute } from "@angular/router";
+import { NotificationService } from "../services/notification.service";
+import { OffersService } from "../services/offers.service";
 
 @Component({
     selector: 'angular2app',
     template: require('./createorder.component.html'),
-    providers: [HttpService,MapsService,Auth1Service]
+    providers: [HttpService,MapsService,Auth1Service,NotificationService,OffersService]
 })
 
 export class CreateOrderToDriverComponent {
+    taxiOffer: any;
     public taxiOrders: Array<TaxiOrder>;
     public taxiOrder : TaxiOrder;
-    public receiverId : string;
+    public offerId : string;
     public start : string;
     public end : string;
     public str : string;
@@ -27,12 +30,12 @@ export class CreateOrderToDriverComponent {
     public strEnd : string;
     public done : boolean ;
     public condition: boolean=false;
-    constructor(private route: ActivatedRoute,private auth : Auth1Service,private http: Http,private httpService: HttpService,private mapsService: MapsService,private ref: ChangeDetectorRef) {
+    constructor(private offersService : OffersService,private notificationService:NotificationService,private route: ActivatedRoute,private auth : Auth1Service,private http: Http,private httpService: HttpService,private mapsService: MapsService,private ref: ChangeDetectorRef) {
         
     }
     ngOnInit() {
         console.log(this.route.snapshot.url[1].path);
-        this.receiverId = this.route.snapshot.url[1].path;
+        this.offerId = this.route.snapshot.url[1].path;
         
     }
     createTaxiOrder(form : NgForm){
@@ -66,10 +69,44 @@ export class CreateOrderToDriverComponent {
                 //console.log(this.end);
                 console.log(form.value.startPoint +" " + form.value.endPoint); 
                 form.value.orderOwnerId=this.auth.userProfile.user_id;
-                form.value.receiverId=this.receiverId
-                console.log(form.value.orderOwnerId);
-                this.httpService.postData(form)
-                    .subscribe((data) => {this.str=data; this.done=true;});
+                form.value.orderOwnerEmail=this.auth.userProfile.email;
+                this.offersService.offerById(this.offerId).subscribe(result => {
+                        this.taxiOffer = this.offersService.taxiOffer;
+                        form.value.receiverId=this.taxiOffer.offerOwnerId;
+                        form.value.receiverEmail=this.taxiOffer.offerOwnerEmail;
+                        console.log(form.value.receiverEmail);
+                        console.log(form.value.receiverId);
+                        this.httpService.postData(form)
+                            .subscribe((data) => {
+                                this.done=true;
+                                this.notificationService.getNumNotifications(this.auth.userProfile.user_id);
+                                let params: URLSearchParams = new URLSearchParams();
+                                let params1: URLSearchParams = new URLSearchParams();
+                                params.set('id', data.id);
+                                params.set('isOwner', "order");
+                                params1.set('id', data.id);
+                                params1.set('isOwner', "owner");
+                                console.log(data);
+                                this.http.get('api/order/sendemail', {
+                                        search: params
+                                    }).subscribe(
+                                    (response) => {
+                                        this.done=true;
+                                        this.http.get('api/order/sendemail', {
+                                        search: params1
+                                            }).subscribe(
+                                            (response) => {
+                                                this.done=true;
+                                            }, 
+                                            (error) => console.log("error")
+                                        );
+                                    }, 
+                                    (error) => console.log("error")
+                                );
+                            });
+                    }
+                );
+                
             });
         });
 

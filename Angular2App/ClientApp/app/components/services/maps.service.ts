@@ -6,10 +6,11 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
  import { NgForm} from '@angular/forms';
-@Injectable()
+import { OffersService } from "./offers.service";
+ @Injectable()
 export class MapsService{
  
-    constructor(private http: Http,private ref: ChangeDetectorRef){ 
+    constructor(private http: Http,private ref: ChangeDetectorRef,private offersService:OffersService){ 
         //console.log("Constr"+this.positions);
     }
 
@@ -32,10 +33,19 @@ export class MapsService{
         event.target.panTo(event.latLng);
     }
 
-    clicked(event) {
+    clicked(event,offer) {
         let marker = event.target;
+        console.log(event);
+        /*var lat = marker.getPosition().lat().toString().substring(0,marker.getPosition().lat().toString().indexOf('.')+3);
+        var lng = marker.getPosition().lng().toString().substring(0,marker.getPosition().lng().toString().indexOf('.')+3);
+        console.log(this.positions);
+        console.log(lat+','+lng);*/
+        //let offer : TaxiOffer;
+        //console.log(position);
+        //this.offersService.offerByLatLng(position);
+        //console.log(offer);
         marker.ng2MapComponent.openInfoWindow('iw', marker, {
-        lat: marker.getPosition().lat(), lng: marker.getPosition().lng(),
+            price: offer.price, place: offer.place,
         });
     }
 

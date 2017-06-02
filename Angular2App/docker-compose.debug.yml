@@ -1,0 +1,12 @@
+version: '2'
+
+services:
+  api:
+    image: api:debug
+    build:
+      context: .
+      dockerfile: Dockerfile.debug
+    ports:
+      - "8090:8090"
+    environment:
+      - REMOTE_DEBUGGING

@@ -28,11 +28,15 @@
                     </a>
                 </li>
                 <li [routerLinkActive]="['link-active']" *ngIf="authService.loggedIn()">
-                        <a [routerLink]="['/notifications']"><span class="glyphicon glyphicon-envelope"></span>Уведомления [{{nsLength}}]
+                        <a [routerLink]="['/notifications']"><span class="glyphicon glyphicon-envelope"></span>Уведомления [{{notificationService.nsLength}}]
                             <a (click)="getNumNotifications()">
                                 <span class=" glyphicon glyphicon-refresh" >
                                 </span> 
                             </a>
+                        </a>
+                </li>
+                <li [routerLinkActive]="['link-active']" *ngIf="authService.loggedIn()">
+                        <a [routerLink]="['/profile']"><span class="glyphicon glyphicon-user"></span> Мой профиль
                         </a>
                 </li>
                 <li>

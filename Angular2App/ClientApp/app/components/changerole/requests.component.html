@@ -1,4 +1,5 @@
-
+<h3>Запросы на изменение прав доступа</h3> 
+<div class="loader" *ngIf="!changeRoleRequests"></div>
 <table class="container" *ngIf="changeRoleRequests">
     <tbody>
         <tr *ngFor="let item of changeRoleRequests; let i = index">

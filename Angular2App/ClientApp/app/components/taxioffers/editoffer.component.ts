@@ -8,11 +8,12 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import './taxioffer';
+import { OffersService } from "../services/offers.service";
 
 @Component({
     selector: 'angular2app',
     template: require('./editoffer.component.html'),
-    providers: [HttpService,MapsService]
+    providers: [HttpService,MapsService,OffersService]
 })
 
 export class EditOfferComponent {

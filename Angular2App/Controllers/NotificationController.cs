@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using Angular2App.Data;
 using Angular2App.Models;
+using Angular2App.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -38,6 +39,7 @@ namespace Angular2App.Controllers
                     {
                             ns.Add(notification);
                     }
+                    
                     return Json(ns,new JsonSerializerSettings
                             {
                                 ContractResolver = new CamelCasePropertyNamesContractResolver()

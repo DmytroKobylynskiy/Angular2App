@@ -62,7 +62,6 @@ h2 a {
             box-shadow: 0 2px 2px -2px white;
 }
 
-
 .mystyle {
     width: 30%;
 }
@@ -116,10 +115,8 @@ h2 a {
   background-color: white;
   color: #4189C7;
   font-weight: bold;
-
   box-shadow: #464A52 -1px 1px, #464A52 -2px 2px, #464A52 -3px 3px, #464A52 -4px 4px, #464A52 -5px 5px, #464A52 -6px 6px;
   transform: translate3d(6px, -6px, 0);
-
   transition-delay: 0s;
   transition-duration: 0.4s;
   transition-property: all;
@@ -138,6 +135,52 @@ h2 a {
     box-shadow: 0px 3px 5px 0px rgba(0,0,0,0.75);
     margin-top: -15px;
     margin-bottom: 40px;
+}
+
+.loader {
+  position: relative;
+  left: 40%;
+  top: 50%;
+  z-index: 1;
+  width: 150px;
+  height: 150px;
+  margin: 0px 0 0 0px;
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid #3498db;
+  width: 120px;
+  height: 120px;
+  -webkit-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite;
+}
+
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Add animation to "page content" */
+.animate-bottom {
+  position: relative;
+  -webkit-animation-name: animatebottom;
+  -webkit-animation-duration: 1s;
+  animation-name: animatebottom;
+  animation-duration: 1s
+}
+
+@-webkit-keyframes animatebottom {
+  from { bottom:-100px; opacity:0 } 
+  to { bottom:0px; opacity:1 }
+}
+
+@keyframes animatebottom { 
+  from{ bottom:-100px; opacity:0 } 
+  to{ bottom:0; opacity:1 }
 }
 
 @media (max-width: 600px) {

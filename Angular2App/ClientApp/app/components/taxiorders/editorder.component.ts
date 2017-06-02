@@ -9,11 +9,12 @@ import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import './taxiorders';
 import { Auth1Service } from "../services/auth1.service";
+import { OffersService } from "../services/offers.service";
 
 @Component({
     selector: 'angular2app',
     template: require('./editorder.component.html'),
-    providers: [HttpService,MapsService]
+    providers: [HttpService,MapsService,OffersService,Auth1Service]
 })
 
 export class EditOrderComponent {

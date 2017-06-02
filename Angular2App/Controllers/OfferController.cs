@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Linq;
 using Angular2App.Data;
 using Angular2App.Models;
-using Microsoft.AspNetCore.Identity;
+using Angular2App.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -71,6 +72,38 @@ namespace Angular2App.Controllers
             }*/
             return Json(_offers);
         }
+
+        [HttpGet("[action]")]
+        public async Task<IActionResult> OffersCoord(){
+            List<TaxiOffer> taxiOffers = await db.Offers.ToListAsync();
+            List<TaxiOffer> taxi = taxiOffers;
+            for (int i = 0; i < taxi.Count; i++)
+            {
+                if(taxiOffers[i].Place.IndexOf('|')>0){
+                     taxi[i].Place = taxiOffers[i].Place.Substring(0,taxiOffers[i].Place.IndexOf('|'));
+                }
+            }
+            return Json(taxi);
+        }
+
+        [HttpGet("[action]")]
+        [HttpGet("{index}")]
+        public async Task<IActionResult> OfferById(int index){
+            if (index != null)
+            {
+                TaxiOffer taxiOffer = await db.Offers.FirstOrDefaultAsync(p => p.Id == index);
+                if (taxiOffer != null)
+                {
+                    return Json(taxiOffer,new JsonSerializerSettings
+                    {
+                        ContractResolver = new CamelCasePropertyNamesContractResolver()
+                    });
+                }
+                
+            }
+            return NotFound();
+        }
+
         [HttpPost("[action]")]
         public async Task<IActionResult> CreateOffer([FromBody]TaxiOffer Offer)
         {
@@ -80,23 +113,32 @@ namespace Angular2App.Controllers
                     ContractResolver = new CamelCasePropertyNamesContractResolver()
             });
         }
-        /*
-        public async Task<IActionResult> MyOffers()
+        
+        [HttpGet("[action]")]
+        [HttpGet("{ownerId}")]
+        public async Task<IActionResult> MyOffers(string ownerId)
         {
-            var user = await GetCurrentUserAsync();
-            var userId = user?.Id;
-            List<TaxiOffer> allOrders = await db.TaxiOffers.ToListAsync();
-            List<TaxiOffer> myOffers = new List<TaxiOffer>();
-            foreach (var order in allOrders)
-            {
-                if (order.OfferOwnerId == userId)
+            List<TaxiOffer> taxi = new List<TaxiOffer>();
+            _logger.LogInformation("asdsd"+ ownerId);
+            using(db){
+                var taxis = from n in db.Offers
+                                    where n.OfferOwnerId==ownerId
+                                    select n;
+                foreach (var notification in taxis)
                 {
-                    myOffers.Add(order);
+                        taxi.Add(notification);
+                }
+                _logger.LogInformation("asdsd"+ taxi.Count);
+                for (int i = 0; i < taxi.Count; i++)
+                {
+                    if(taxi[i].Place.IndexOf('|')>0){
+                        taxi[i].Place = taxi[i].Place.Remove(0, taxi[i].Place.IndexOf('|')+1);
+                    }
                 }
             }
-            return View(myOffers);
+            return Json(taxi);
         }
-
+        /*
         public async Task<IActionResult> DeleteTaxiOffer(int id)
         {
             if (id != null)
@@ -109,13 +151,13 @@ namespace Angular2App.Controllers
         }*/
 
         [HttpGet("[action]")]
-        [HttpGet("{index}")]
-        public async Task<IActionResult> RemoveTaxiOffer(int? index)
+        [HttpGet("{offerId}")]
+        public async Task<IActionResult> RemoveTaxiOffer(int? offerId)
         {
             List<TaxiOffer> taxi = await db.Offers.ToListAsync();
-            if (index != null)
+            if (offerId != null)
             {
-                TaxiOffer offer = await db.Offers.FirstOrDefaultAsync(p => p.Id == index);
+                TaxiOffer offer = await db.Offers.FirstOrDefaultAsync(p => p.Id == offerId);
                 if (offer != null)
                 {
                     db.Offers.Remove(offer);
@@ -134,10 +176,7 @@ namespace Angular2App.Controllers
                 }
                 
             }
-            return Json(taxi,new JsonSerializerSettings
-                    {
-                        ContractResolver = new CamelCasePropertyNamesContractResolver()
-                    });
+            return Json(taxi,new JsonSerializerSettings{ContractResolver = new CamelCasePropertyNamesContractResolver() });
         }
 /*
         public async Task<IActionResult> DetailsTaxiOffer(int? id)
@@ -173,12 +212,12 @@ namespace Angular2App.Controllers
         }
 
         [HttpGet("[action]")]
-        [HttpGet("{id}")]
-        public async Task<IActionResult> EditTaxiOffer(int? id)
+        [HttpGet("{editedOfferId}")]
+        public async Task<IActionResult> EditTaxiOffer(int? editedOfferId)
         {
-            if (id != null)
+            if (editedOfferId != null)
             {
-                TaxiOffer taxiOffer = await db.Offers.FirstOrDefaultAsync(p => p.Id == id);
+                TaxiOffer taxiOffer = await db.Offers.FirstOrDefaultAsync(p => p.Id == editedOfferId);
                 taxiOffer.Place = taxiOffer.Place.Remove(0,taxiOffer.Place.IndexOf('|')+1);
                 if (taxiOffer != null)
                     return Json(taxiOffer,new JsonSerializerSettings
@@ -189,7 +228,7 @@ namespace Angular2App.Controllers
             return NotFound();
         }
 
-    [HttpPost("[action]")]
+        [HttpPost("[action]")]
         public async Task<IActionResult> EditTaxiOffer([FromBody]TaxiOrder taxiOfferNew)
         {
             //TaxiOrder taxiOrder = await db.TaxiOrders.FirstOrDefaultAsync(p => p.Id == taxiOrderNew.Id);
@@ -197,10 +236,9 @@ namespace Angular2App.Controllers
             db.TaxiOrders.Update(taxiOfferNew);
             
             await db.SaveChangesAsync();
-            return Json(taxiOfferNew.StartPoint,new JsonSerializerSettings
-                {
+            return Json(taxiOfferNew.StartPoint,new JsonSerializerSettings {
                     ContractResolver = new CamelCasePropertyNamesContractResolver()
-                });
+            });
         }
 
    /*     

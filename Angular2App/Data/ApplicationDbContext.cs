@@ -11,7 +11,6 @@ namespace Angular2App.Data
             : base(options)
         {
         }
-        public DbSet<Client> Clients {get;set;}
         //public DbSet<TaxiOffer> TaxiOffers {get;set;}
         public DbSet<TaxiOrder> TaxiOrders {get;set;}
         public DbSet<TaxiOffer> Offers {get;set;}

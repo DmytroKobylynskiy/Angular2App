@@ -73,20 +73,6 @@ namespace Angular2App.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
-            modelBuilder.Entity("Angular2App.Models.Client", b =>
-                {
-                    b.Property<int>("ClientId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<bool>("CarExist");
-
-                    b.Property<string>("DriverLicense");
-
-                    b.HasKey("ClientId");
-
-                    b.ToTable("Clients");
-                });
-
             modelBuilder.Entity("Angular2App.Models.NotificationOrder", b =>
                 {
                     b.Property<int>("NotificationId")
@@ -100,9 +86,13 @@ namespace Angular2App.Migrations
 
                     b.Property<int>("OrderId");
 
+                    b.Property<string>("OrderOwnerEmail");
+
                     b.Property<string>("OrderOwnerId");
 
                     b.Property<string>("OrderStatus");
+
+                    b.Property<string>("ReceiverEmail");
 
                     b.Property<string>("ReceiverId");
 
@@ -140,6 +130,8 @@ namespace Angular2App.Migrations
                     b.Property<string>("Name")
                         .IsRequired();
 
+                    b.Property<string>("OfferOwnerEmail");
+
                     b.Property<string>("OfferOwnerId");
 
                     b.Property<string>("OfferStatus");
@@ -168,13 +160,13 @@ namespace Angular2App.Migrations
 
                     b.Property<bool>("FreightCar");
 
+                    b.Property<string>("OrderOwnerEmail");
+
                     b.Property<string>("OrderOwnerId");
 
                     b.Property<string>("OrderStatus");
 
-                    b.Property<string>("PassengerName");
-
-                    b.Property<string>("PassengerPhone");
+                    b.Property<string>("ReceiverEmail");
 
                     b.Property<string>("ReceiverId");
 

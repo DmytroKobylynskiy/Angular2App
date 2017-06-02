@@ -26,13 +26,16 @@ import { AdditionCalculateWindow } from "./components/taxiorders/modal";
 import { CreateOrderToDriverComponent } from "./components/taxiorders/createorderToDriver.component";
 import { NotificationsComponent } from "./components/notifications/notifications.component";
 import { RequestsComponent } from "./components/changerole/requests.component";
+import { Ng2OrderModule } from 'ng2-order-pipe';
+import { ProfileComponent } from "./components/changerole/profile.component";
 export function authHttpServiceFactory(http: Http, options: RequestOptions) {
   return new AuthHttp( new AuthConfig({}), http, options);
 }
 const taxiOrderRoutes: Routes = [
   { path: 'taxiorders',  component: TaxiOrdersComponent },
   { path: 'taxiorders/:id', component: EditOrderComponent },
-  { path: 'createTaxiOrder/:receiverId', component: CreateOrderToDriverComponent }
+  { path: 'createTaxiOrder/:receiverId', component: CreateOrderToDriverComponent },
+  { path: 'createTaxiOrder/**',component:CreateOrderToDriverComponent}
 ];
 
 const taxiOfferRoutes: Routes = [
@@ -57,11 +60,13 @@ const taxiOfferRoutes: Routes = [
         NotificationsComponent,
         CreateOrderToDriverComponent,
         RequestsComponent,
-        AdditionCalculateWindow
+        AdditionCalculateWindow,
+        ProfileComponent
     ],
     imports: [
         UniversalModule, // Must be first import. This automatically imports BrowserModule, HttpModule, and JsonpModule too.
         FormsModule,
+        Ng2OrderModule,
         HttpModule,
         CommonModule,
         BrowserModule,
@@ -71,7 +76,7 @@ const taxiOfferRoutes: Routes = [
         RouterModule.forChild(taxiOfferRoutes),
         RouterModule.forRoot([
             { path: '', redirectTo: 'home', pathMatch: 'full' },
-            { path: 'home', component: HomeComponent },
+            { path: 'home', component : HomeComponent},
             { path: 'counter', component: CounterComponent },
             { path: 'hello', component: HelloWorldComponent },
             { path: 'createTaxiOrder', component : CreateOrderComponent},
@@ -80,6 +85,7 @@ const taxiOfferRoutes: Routes = [
             { path: 'requests', component : RequestsComponent},
             { path: 'offers', component : TaxiOffersComponent},
             { path: 'notifications', component : NotificationsComponent},
+            { path: 'profile', component: ProfileComponent},
             { path: '**', redirectTo: 'home' }
         ]),
         Ng2MapModule.forRoot({apiUrl: 'https://maps.google.com/maps/api/js?sensor=true&libraries=places&key=AIzaSyBaiH4wZdZ3nlL9itqn6-D7-LOUsdGuyD4'})

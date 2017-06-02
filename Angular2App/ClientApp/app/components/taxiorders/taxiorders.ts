@@ -8,8 +8,6 @@ interface TaxiOrder {
     freightCar : boolean;
     distanse : number;
     duration : number;
-    passengerPhone : string ;
-    passengerName : string;
     orderOwnerId : string;
     orderStatus : string;
     expectedDate : string;

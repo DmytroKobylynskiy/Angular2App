@@ -4,11 +4,12 @@ import { HttpService} from '../services/http.service';
 import {Http,Response, Headers, URLSearchParams} from '@angular/http';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import '../entities/mes';
+import { NotificationService } from "../services/notification.service";
 @Component({
     selector: 'nav-menu',
     template: require('./navmenu.component.html'),
     styles: [require('./navmenu.component.css')],
-    providers: [HttpService,Auth1Service]
+    providers: [HttpService,Auth1Service,NotificationService]
 })
 export class NavMenuComponent {
 
@@ -17,40 +18,24 @@ export class NavMenuComponent {
     public loggedIn : boolean;
     public done : boolean;
     public notifications : Array<NotificationOrder>; 
-    constructor(private http: Http,private httpService: HttpService,private authService: Auth1Service) {
+    constructor(private notificationService: NotificationService,private http: Http,private httpService: HttpService,private authService: Auth1Service) {
+        if(this.authService.loggedIn())
+         this.notificationService.getNumNotifications(this.authService.userProfile.user_id).subscribe((data) => {this.nsLength=data;}
+         );
     }
 
+
     ngOnInit(){
-        this.getNumNotifications();
+        
+    }
+
+    getNumNotifications(){
+        this.notificationService.getNumNotifications(this.authService.userProfile.user_id);
+        console.log(this.notificationService.nsLength);
+        this.nsLength = this.notificationService.nsLength;
     }
 
     login(){
         this.authService.login();
     }
-    getNumNotifications(){
-        if(this.authService.loggedIn()){
-            let params: URLSearchParams = new URLSearchParams();
-            params.set('ownerId', this.authService.userProfile.user_id);
-            this.http.get('api/notification/getNumNotificationsOrder', {
-                search: params
-            }).subscribe(
-            (response) => {this.nsLength = response.json();this.done=true}, 
-            (error) => console.log("error")
-        ); 
-        }
-    }
-
-    getNotifications(){
-        if(this.authService.loggedIn()){
-            let params: URLSearchParams = new URLSearchParams();
-            params.set('ownerId', this.authService.userProfile.user_id);
-            this.http.get('api/notification/getNotificationsOrder', {
-                search: params
-            }).subscribe(
-            (response) => {this.notifications = response.json();this.nsLength=this.notifications.length;this.done=true}, 
-            (error) => console.log("error")
-        ); 
-        }
-    }
-
 }
