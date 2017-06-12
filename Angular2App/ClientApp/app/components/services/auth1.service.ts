@@ -14,26 +14,7 @@ var options = {
     languageDictionary: {
       emailInputPlaceholder: "Введите ваш email",
       title: "Вход"
-    },
-    additionalSignUpFields: [{
-      name: "driveLicense",                              // required
-      placeholder: "enter your driveLicense",            // required
-      driveLicense : "enter your driver license",
-      validator: function(value) {                  // optional
-        // only accept addresses with more than 10 characters
-        return value.length > -1;
-      }
-    },
-    {
-        type: "select",
-        name: "role",
-        options: [
-          {value: "customer", label: "Заказчик"},
-          {value: "сarrier", label: "Перевозчик"}
-        ],
-        prefill: "Заказчик",
-        placeholder: "Заказчик или предлагающий?"
-    }] 
+    } 
   };
 @Injectable()
 export class Auth1Service {
@@ -55,7 +36,7 @@ export class Auth1Service {
           return;
         }
 
-        profile.user_metadata = profile.user_metadata || {};
+        profile.user_metadata = profile.user_metadata || {role:"customer"};
         localStorage.setItem('profile', JSON.stringify(profile));
         this.userProfile = profile;
       });

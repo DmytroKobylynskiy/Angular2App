@@ -27,7 +27,9 @@ import { CreateOrderToDriverComponent } from "./components/taxiorders/createorde
 import { NotificationsComponent } from "./components/notifications/notifications.component";
 import { RequestsComponent } from "./components/changerole/requests.component";
 import { Ng2OrderModule } from 'ng2-order-pipe';
+import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import { ProfileComponent } from "./components/changerole/profile.component";
+import { ReactiveFormsModule } from '@angular/forms';
 export function authHttpServiceFactory(http: Http, options: RequestOptions) {
   return new AuthHttp( new AuthConfig({}), http, options);
 }
@@ -70,6 +72,8 @@ const taxiOfferRoutes: Routes = [
         HttpModule,
         CommonModule,
         BrowserModule,
+        ReactiveFormsModule,
+        Ng2SearchPipeModule,
         ModalModule.forRoot(),
         BootstrapModalModule,
         RouterModule.forChild(taxiOrderRoutes),

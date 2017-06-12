@@ -3,9 +3,12 @@
 <table class="container" *ngIf="notifications">
     <tbody>
         <tr *ngFor="let item of notifications; let i = index">
-            <td>{{i}} {{item.notificationTitle}} <span *ngIf="isCarrier">Нажмите * для ввода информации о выполнении</span>
+            <td>{{item.notificationTitle}} <span *ngIf="isCarrier">Нажмите ✓ для ввода информации о выполнении</span>
                 <div *ngIf="item.isLoad && item.condition">
                     <b>Откуда:</b> {{item.taxiOrder.startPoint}}<br>
+                    <b>Куда:</b> {{item.taxiOrder.endPoint}}<br>
+                    <b>Дата:</b> {{item.taxiOrder.date}}<br>
+                    <b>Время:</b> {{item.taxiOrder.time}}<br>
                 </div>
                 <div *ngIf="item.conditionAgree && isCarrier">
                     <form #myForm="ngForm" novalidate>

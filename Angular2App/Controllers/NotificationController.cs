@@ -25,19 +25,31 @@ namespace Angular2App.Controllers
         
         [HttpGet("[action]")]
         [HttpGet("{ownerId}")]
-        public async Task<IActionResult> GetNotificationsOrder(string ownerId)
+        [HttpGet("{role}")]
+        public async Task<IActionResult> GetNotificationsOrder(string ownerId,string role)
         {   
             
             if (ownerId != null)
             {
                 List<NotificationOrder> ns = new List<NotificationOrder>() ; 
                 using(db){
-                    var notifications = from n in db.NotificationsOrder
-                                        where (n.OrderOwnerId == ownerId || n.ReceiverId == ownerId)&&n.NotificationStatus=="Free"
+
+                    if(role=="carrier"){
+                        var notifications = from n in db.NotificationsOrder
+                                        where (n.OrderOwnerId == ownerId || n.ReceiverId == ownerId)&&n.NotificationStatusCarrier=="Free"
                                         select n;
-                    foreach (var notification in notifications)
-                    {
+                        foreach (var notification in notifications)
+                        {
                             ns.Add(notification);
+                        }
+                    }else if(role=="client"){
+                        var notifications = from n in db.NotificationsOrder
+                                        where (n.OrderOwnerId == ownerId || n.ReceiverId == ownerId)&&n.NotificationStatusClient=="Free"
+                                        select n;
+                        foreach (var notification in notifications)
+                        {
+                            ns.Add(notification);
+                        }
                     }
                     
                     return Json(ns,new JsonSerializerSettings
@@ -51,19 +63,30 @@ namespace Angular2App.Controllers
 
         [HttpGet("[action]")]
         [HttpGet("{ownerId}")]
-        public async Task<IActionResult> GetNumNotificationsOrder(string ownerId)
+        [HttpGet("{role}")]
+        public async Task<IActionResult> GetNumNotificationsOrder(string ownerId,string role)
         {   
             
             if (ownerId != null)
             {
                 List<NotificationOrder> ns = new List<NotificationOrder>() ; 
                 using(db){
-                    var notifications = from n in db.NotificationsOrder
-                                        where (n.OrderOwnerId == ownerId || n.ReceiverId == ownerId)&&n.NotificationStatus=="Free"
+                    if(role=="carrier"){
+                        var notifications = from n in db.NotificationsOrder
+                                        where (n.OrderOwnerId == ownerId || n.ReceiverId == ownerId)&&n.NotificationStatusCarrier=="Free"
                                         select n;
-                    foreach (var notification in notifications)
-                    {
+                        foreach (var notification in notifications)
+                        {
                             ns.Add(notification);
+                        }
+                    }else if(role=="client"){
+                        var notifications = from n in db.NotificationsOrder
+                                        where (n.OrderOwnerId == ownerId || n.ReceiverId == ownerId)&&n.NotificationStatusClient=="Free"
+                                        select n;
+                        foreach (var notification in notifications)
+                        {
+                            ns.Add(notification);
+                        }
                     }
                     return Json(ns.Count(),new JsonSerializerSettings
                             {
@@ -77,13 +100,13 @@ namespace Angular2App.Controllers
         [HttpGet("[action]")]
         [HttpGet("{id}")]
         [HttpGet("{Status}")]
-        public async Task<IActionResult> SetNotificationStatus(int id,string status)
+        public async Task<IActionResult> SetNotificationStatusCarrier(int id,string status)
         {   
             
             if (id != null)
             {
                 NotificationOrder notification = await db.NotificationsOrder.FirstOrDefaultAsync(n => n.NotificationId == id);
-                notification.NotificationStatus = status;
+                notification.NotificationStatusCarrier = status;
                 db.NotificationsOrder.Update(notification);
                 await db.SaveChangesAsync();
                 List<NotificationOrder> ns = await db.NotificationsOrder.ToListAsync();
@@ -95,146 +118,28 @@ namespace Angular2App.Controllers
             }
             return NotFound();
         }
-/*
-        [HttpPost("[action]")]
-        public async Task<IActionResult> CreateOffer([FromBody]TaxiOffer Offer)
-        {
-            db.Offers.Add(Offer);
-            await db.SaveChangesAsync();
-            return Json(Offer.Place,new JsonSerializerSettings{
-                    ContractResolver = new CamelCasePropertyNamesContractResolver()
-            });
-        }
-        /*
-        public async Task<IActionResult> MyOffers()
-        {
-            var user = await GetCurrentUserAsync();
-            var userId = user?.Id;
-            List<TaxiOffer> allOrders = await db.TaxiOffers.ToListAsync();
-            List<TaxiOffer> myOffers = new List<TaxiOffer>();
-            foreach (var order in allOrders)
-            {
-                if (order.OfferOwnerId == userId)
-                {
-                    myOffers.Add(order);
-                }
-            }
-            return View(myOffers);
-        }
 
-        public async Task<IActionResult> DeleteTaxiOffer(int id)
-        {
-            if (id != null)
-            {
-                TaxiOffer taxiOffer = await db.TaxiOffers.FirstOrDefaultAsync(p => p.Id == id);
-                if (taxiOffer != null)
-                    return View(taxiOffer);
-            }
-            return NotFound();
-        }*/
-
-        [HttpGet("[action]")]
-        [HttpGet("{index}")]
-        public async Task<IActionResult> RemoveTaxiOffer(int? index)
-        {
-            List<TaxiOffer> taxi = await db.Offers.ToListAsync();
-            if (index != null)
-            {
-                TaxiOffer offer = await db.Offers.FirstOrDefaultAsync(p => p.Id == index);
-                if (offer != null)
-                {
-                    db.Offers.Remove(offer);
-                    await db.SaveChangesAsync();
-                    taxi = await db.Offers.ToListAsync();
-                    for (int i = 0; i < taxi.Count; i++)
-                    {
-                        if(taxi[i].Place.IndexOf('|')>0){
-                            taxi[i].Place = taxi[i].Place.Remove(0, taxi[i].Place.IndexOf('|')+1);
-                        }
-                    }
-                    return Json(taxi,new JsonSerializerSettings
-                    {
-                        ContractResolver = new CamelCasePropertyNamesContractResolver()
-                    });
-                }
-                
-            }
-            return Json(taxi,new JsonSerializerSettings
-                    {
-                        ContractResolver = new CamelCasePropertyNamesContractResolver()
-                    });
-        }
-/*
-        public async Task<IActionResult> DetailsTaxiOffer(int? id)
-        {
-            if (id != null)
-            {
-                TaxiOffer taxiOffer = await db.TaxiOffers.FirstOrDefaultAsync(p => p.Id == id);
-                if (taxiOffer != null)
-                    return View(taxiOffer);
-            }
-            return NotFound();
-        }
-*//*/
         [HttpGet("[action]")]
         [HttpGet("{id}")]
-        public async Task<IActionResult> EditTaxiOffer(int? id)
-        {
-            if (id != null)
-            {
-                TaxiOffer taxiOffer = await db.Offers.FirstOrDefaultAsync(p => p.Id == id);
-                taxiOffer.Place = taxiOffer.Place.Remove(0,taxiOffer.Place.IndexOf('|')+1);
-                if (taxiOffer != null)
-                    return Json(taxiOffer,new JsonSerializerSettings
-                    {
-                        ContractResolver = new CamelCasePropertyNamesContractResolver()
-                    });
-            }
-            return NotFound();
-        }
-
-    [HttpPost("[action]")]
-        public async Task<IActionResult> EditTaxiOffer([FromBody]TaxiOrder taxiOfferNew)
-        {
-            //TaxiOrder taxiOrder = await db.TaxiOrders.FirstOrDefaultAsync(p => p.Id == taxiOrderNew.Id);
-            //taxiOrder = taxiOrderNew;
-            db.TaxiOrders.Update(taxiOfferNew);
+        [HttpGet("{Status}")]
+        public async Task<IActionResult> SetNotificationStatusClient(int id,string status)
+        {   
             
-            await db.SaveChangesAsync();
-            return Json(taxiOfferNew.StartPoint,new JsonSerializerSettings
-                {
-                    ContractResolver = new CamelCasePropertyNamesContractResolver()
-                });
-        }*/
-   /*     
-        public async Task<IActionResult> AgreeTaxiOffer(int? id)
-        {
             if (id != null)
             {
-                TaxiOffer taxiOffer = await db.TaxiOffers.FirstOrDefaultAsync(p => p.Id == id);
-                if (taxiOffer != null)
-                {
-                    taxiOffer.OfferStatus = "In progress";
-                    db.TaxiOffers.Update(taxiOffer);
-                    await db.SaveChangesAsync();
-                    return View(taxiOffer);
-                }
+                NotificationOrder notification = await db.NotificationsOrder.FirstOrDefaultAsync(n => n.NotificationId == id);
+                notification.NotificationStatusClient = status;
+                db.NotificationsOrder.Update(notification);
+                await db.SaveChangesAsync();
+                List<NotificationOrder> ns = await db.NotificationsOrder.ToListAsync();
+                return Json(ns,new JsonSerializerSettings
+                            {
+                                ContractResolver = new CamelCasePropertyNamesContractResolver()
+                            });
+                
             }
             return NotFound();
         }
-
         
-        [HttpGet]
-        [ActionName("Delete")]
-        public async Task<IActionResult> ConfirmDeleteTaxiOffer(int? id)
-        {
-            if (id != null)
-            {
-                TaxiOffer taxiOffer = await db.TaxiOffers.FirstOrDefaultAsync(p => p.Id == id);
-                if (taxiOffer != null)
-                    return View(taxiOffer);
-            }
-            return NotFound();
-        }*/
     }
 }

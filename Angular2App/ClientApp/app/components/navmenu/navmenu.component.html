@@ -14,7 +14,7 @@
             <ul class='nav navbar-nav'>
                 <li [routerLinkActive]="['link-active']">
                     <a [routerLink]="['/home']">
-                        <span class='glyphicon glyphicon-home'></span> Home
+                        <span class='glyphicon glyphicon-home'></span> Главная
                     </a>
                 </li>
                 <li [routerLinkActive]="['link-active']" *ngIf="authService.loggedIn()">
@@ -41,11 +41,11 @@
                 </li>
                 <li>
                     <!-- We'll show the login link if the user is not currently logged in -->
-                    <a (click)=login() *ngIf="!authService.loggedIn()">Log In</a>
+                    <a (click)=login() *ngIf="!authService.loggedIn()">Войти</a>
                 </li>
                 <li>
                     <!-- On the other hand, if the user is logged in, we'll show a log out link -->
-                    <a (click)=authService.logout() *ngIf="authService.loggedIn()">Log Out</a>
+                    <a (click)=authService.logout() *ngIf="authService.loggedIn()">Выйти</a>
                 </li>
                 
                 

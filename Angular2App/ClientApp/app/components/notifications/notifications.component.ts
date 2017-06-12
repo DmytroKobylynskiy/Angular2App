@@ -38,6 +38,7 @@ export class NotificationsComponent {
                 this.isCarrier = true;
                 let params: URLSearchParams = new URLSearchParams();
                 params.set('ownerId', this.authService.userProfile.user_id);
+                params.set('role','carrier');
                 this.http.get('api/notification/getnotificationsorder', {
                     search: params
                 }).subscribe(
@@ -48,6 +49,7 @@ export class NotificationsComponent {
                 this.isUser = true;
                 let params: URLSearchParams = new URLSearchParams();
                 params.set('ownerId', this.authService.userProfile.user_id);
+                params.set('role','client');
                 this.http.get('api/notification/getnotificationsorder', {
                     search: params
                 }).subscribe(
@@ -64,7 +66,7 @@ export class NotificationsComponent {
          let params: URLSearchParams = new URLSearchParams();
             params.set('id', this.notifications[item].notificationId);
             params.set('status',"OK");
-            this.http.get('api/notification/SetNotificationStatus', {
+            this.http.get('api/notification/SetNotificationStatusClient', {
                     search: params
                 }).subscribe(
                 (response) => {this.notifications=response.json()}, 
@@ -76,12 +78,19 @@ export class NotificationsComponent {
          let params: URLSearchParams = new URLSearchParams();
             params.set('id', this.notifications[item].notificationId);
             params.set('status', "Rejected");
-            this.http.get('api/notification/SetNotificationStatus', {
+            let requestString ;
+            if(this.isCarrier){
+                requestString="SetNotificationStatusCarrier"
+            }else{
+                requestString="SetNotificationStatusClient"
+            }
+            this.http.get('api/notification/'+requestString, {
                     search: params
                 }).subscribe(
                 (response) => {
                     let params: URLSearchParams = new URLSearchParams();
                     params.set('ownerId', this.authService.userProfile.user_id);
+                    params.set('role', this.authService.getUserProfile().user_metadata.role);
                     this.http.get('api/notification/getnotificationsorder', {
                         search: params
                     }).subscribe(
@@ -135,16 +144,17 @@ export class NotificationsComponent {
                         }).subscribe(
                             (response) => {this.price=response.json();
                             params2.set('status',"Agreed");
-                            this.http.get('api/notification/SetNotificationStatus', {
+                            this.http.get('api/notification/SetNotificationStatusCarrier', {
                                     search: params2
                                 }).subscribe(
                                 (response) => {
+                                    this.notifications=response.json();
                                     this.http.get('api/notification/getnotificationsorder', {
                                             search: params
                                         }).subscribe(
                                         (response) => {this.notifications=response.json();this.done=true}, 
                                         (error) => console.log("error")
-                                    ); 
+                                    );
                                 }, 
                                 (error) => console.log("error")
                             );

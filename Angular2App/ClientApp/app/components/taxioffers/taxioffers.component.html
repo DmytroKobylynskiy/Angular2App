@@ -1,14 +1,21 @@
-<h3>Список предложений</h3> 
-    <div class="btn-group">
-                        <button class="btn btn-default" data-toggle="tooltip" title="На карте" data-placement="top"  (click)="showMap()"><span class="glyphicon glyphicon-globe"></span></button>
-                        <button class="btn btn-default" data-toggle="tooltip" title="Список" data-placement="top"   (click)="showList()"><span class="glyphicon glyphicon-list"></span></button>
-    </div> 
-    <span *ngIf="isUser">Не нашли подходящего? Создайте свой заказ </span><button *ngIf="isUser" class="btn btn-default" 
-        [routerLink]="['/createTaxiOrder']"><span class="glyphicon glyphicon-plus"></span></button>
 
+<div style="margin-top:0.5%;">
+    <h3>Список предложений
+        
+        <div style="float: right; position:relative" class="btn-group">
+                        <button  class="btn btn-default" data-toggle="tooltip" title="На карте" data-placement="top"  (click)="showMap()"><span class="glyphicon glyphicon-globe"></span></button>
+                        <button  class="btn btn-default" data-toggle="tooltip" title="Список" data-placement="top"   (click)="showList()"><span class="glyphicon glyphicon-list"></span></button>
+        </div>
+        <span style="float: right;font-size: 16px;margin:0.5%;padding:0.5%">Отображение предложений</span>
+    </h3>
+</div> 
+<span *ngIf="isUser">Не нашли подходящего? Создайте свой заказ </span><button *ngIf="isUser" class="btn btn-default" 
+        [routerLink]="['/createTaxiOrder']"><span class="glyphicon glyphicon-plus"></span></button>
 <div>
     <div class="loader" *ngIf="!taxiOffers"></div>
+    
     <table class="container" *ngIf="taxiOffers && !map">
+        <input type="text" class = "form-control" placeholder="Поиск" [(ngModel)]="term">
         <tbody>
             <tr>
                   <th
@@ -25,7 +32,7 @@
 
                   <th> Действие </th>
             </tr>
-            <tr *ngFor="let item of taxiOffers | orderBy: order ; let i = index">
+            <tr *ngFor="let item of taxiOffers |filter:term | orderBy: order ; let i = index">
                 <td>{{item.place}}
                     <div *ngIf="item.condition">
                         <b>Местоположение:</b> {{item.place}}<br>
@@ -37,8 +44,8 @@
                 <td class="mystyle">
                     <div class="btn-group">
                         <button class="btn btn-default" data-toggle="tooltip" title="Подробнее" data-placement="top"  (click)="onSelect(i)"><span class="glyphicon glyphicon-info-sign"></span></button>
-                        <button *ngIf="isCarrier" class="btn btn-default" data-toggle="tooltip" title="Изменить" data-placement="top"   (click)="onEdit(item)"><span class="glyphicon glyphicon-pencil"></span></button>
-                        <button *ngIf="isCarrier" class="btn btn-default" data-toggle="tooltip" title="Удалить" data-placement="top"   (click)="offersService.onDelete(item)"><span class="glyphicon glyphicon-remove"></span> </button>
+                        <button *ngIf="isAdmin" class="btn btn-default" data-toggle="tooltip" title="Изменить" data-placement="top"   (click)="onEdit(item)"><span class="glyphicon glyphicon-pencil"></span></button>
+                        <button *ngIf="isAdmin" class="btn btn-default" data-toggle="tooltip" title="Удалить" data-placement="top"   (click)="offersService.onDelete(item)"><span class="glyphicon glyphicon-remove"></span> </button>
                         <button *ngIf="isUser" class="btn btn-default"  data-toggle="tooltip" title="Принять" data-placement="top"  (click)="onAgree(item)"><span class="glyphicon glyphicon-ok"></span></button>
                     </div> 
                 </td>

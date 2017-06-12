@@ -3,6 +3,7 @@ import { Http } from '@angular/http';
 import { HttpService} from '../services/http.service';
 import { MapsService} from '../services/maps.service';
 import { NgForm} from '@angular/forms';
+import { FormGroup, FormControl } from '@angular/forms';
 import {Response, Headers, URLSearchParams} from '@angular/http';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
@@ -28,7 +29,7 @@ export class CreateOfferComponent {
     public done : boolean ;
     public condition: boolean=false;
     constructor(private router: Router,private auth:Auth1Service,private http: Http,private httpService: HttpService,private mapsService: MapsService,private ref: ChangeDetectorRef) {
-        
+
     }
     createOffer(form : NgForm){
         if(this.auth.loggedIn()){

@@ -8,9 +8,10 @@ using Angular2App.Data;
 namespace Angular2App.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170602185713_NotificationsStatusForCarrierClient5")]
+    partial class NotificationsStatusForCarrierClient5
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.0.0-rtm-21431")

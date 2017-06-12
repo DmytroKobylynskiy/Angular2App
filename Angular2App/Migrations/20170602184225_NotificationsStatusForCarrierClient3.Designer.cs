@@ -8,9 +8,10 @@ using Angular2App.Data;
 namespace Angular2App.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170602184225_NotificationsStatusForCarrierClient3")]
+    partial class NotificationsStatusForCarrierClient3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.0.0-rtm-21431")
@@ -75,8 +76,7 @@ namespace Angular2App.Migrations
 
             modelBuilder.Entity("Angular2App.Models.NotificationOrder", b =>
                 {
-                    b.Property<int>("NotificationId")
-                        .ValueGeneratedOnAdd();
+                    b.Property<int>("NotificationId");
 
                     b.Property<bool>("Condition");
 
@@ -105,8 +105,7 @@ namespace Angular2App.Migrations
 
             modelBuilder.Entity("Angular2App.Models.RequestRole", b =>
                 {
-                    b.Property<int>("RequestId")
-                        .ValueGeneratedOnAdd();
+                    b.Property<int>("RequestId");
 
                     b.Property<string>("DriverLicense");
 
@@ -123,8 +122,7 @@ namespace Angular2App.Migrations
 
             modelBuilder.Entity("Angular2App.Models.TaxiOffer", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<int>("Id");
 
                     b.Property<string>("Auto")
                         .IsRequired();
@@ -149,8 +147,7 @@ namespace Angular2App.Migrations
 
             modelBuilder.Entity("Angular2App.Models.TaxiOrder", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<int>("Id");
 
                     b.Property<string>("Date");
 

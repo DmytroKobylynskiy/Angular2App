@@ -7,7 +7,6 @@ namespace Angular2App.Models
 {
     public class TaxiOrder
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
        // [Required]
         //[RegularExpression(@"/^[a-zA-Zа-яА-Я'][a-zA-Zа-яА-Я-' ]+[a-zA-Zа-яА-Я']?$/u", ErrorMessage = "Недопустимая начальная точка")]

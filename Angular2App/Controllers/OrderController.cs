@@ -125,6 +125,7 @@ namespace Angular2App.Controllers
            List<TaxiOrder> allOrders = await db.TaxiOrders.ToListAsync();
            if(taxiOrder.ReceiverId==null){
                taxiOrder.OrderStatus = "Free";
+               taxiOrder.Id=allOrders[allOrders.Count-1].Id+1;
                 db.TaxiOrders.Add(taxiOrder);
                await db.SaveChangesAsync();
            }else{
@@ -276,8 +277,10 @@ namespace Angular2App.Controllers
                     notificationOrder.ReceiverEmail = taxiOrder.ReceiverEmail;
                     notificationOrder.OrderId = taxiOrder.Id;
                     notificationOrder.OrderStatus = taxiOrder.OrderStatus;
-                    notificationOrder.NotificationStatus = "Free";
-                    notificationOrder.NotificationTitle = "Заказ " + taxiOrder.Id + " был принят. " ;
+                    notificationOrder.NotificationStatusClient = "Free";
+                    notificationOrder.NotificationStatusCarrier = "Free";
+                    notificationOrder.NotificationTitle = "Заказ " +  taxiOrder.StartPoint.Remove(0, taxiOrder.StartPoint.IndexOf('|')+1) + " - "
+                        +taxiOrder.EndPoint.Remove(0, taxiOrder.EndPoint.IndexOf('|')+1)+" был принят. " ;
                     db.NotificationsOrder.Add(notificationOrder);
                     await db.SaveChangesAsync();
         }

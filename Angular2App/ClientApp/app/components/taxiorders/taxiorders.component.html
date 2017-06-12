@@ -5,6 +5,7 @@
     <div class="loader" *ngIf="!taxiOrders"></div>
     <table class="container" *ngIf="authorized">
             <tbody *ngIf="taxiOrders">
+                <input style="margin:4px"type="text" class = "form-control" placeholder="Поиск" [(ngModel)]="term">
                 <tr>
                     <th
                         (click)="setOrder('startPoint')"
@@ -20,15 +21,14 @@
 
                     <th> Действие </th>
                 </tr>
-
-                <tr *ngFor="let item of taxiOrders | orderBy: order; let i = index">
-                    <td>{{i}}.{{item.startPoint}}
+                
+                <tr *ngFor="let item of taxiOrders |filter:term | orderBy: order; let i = index">
+                    <td>{{item.startPoint}}
                         <div *ngIf="item.condition">
                             <b>Откуда:</b> {{item.startPoint}}<br>
                             <b>Куда:</b>{{item.endPoint}}<br>
                             <b>Дата:</b>{{item.date}}<br>
                             <b>Время:</b>{{item.time}}<br>
-                            <b>Имя:</b>{{item.passengerName}}<br><br>
                         </div>
                         <div *ngIf="item.conditionAgree">
                             <form #myForm="ngForm" novalidate>

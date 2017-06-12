@@ -11,7 +11,7 @@ import { OffersService } from "./offers.service";
 export class MapsService{
  
     constructor(private http: Http,private ref: ChangeDetectorRef,private offersService:OffersService){ 
-        //console.log("Constr"+this.positions);
+        
     }
 
     public positions = [  ];

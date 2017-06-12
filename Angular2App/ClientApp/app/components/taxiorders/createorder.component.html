@@ -27,12 +27,8 @@
             <input type="time" class="form-control" name="time" [(ngModel)]="time" />
         </div>
         <div class="form-group">
-            <label>Имя</label>
-            <input type="text" class="form-control" name="passengerName" [(ngModel)]="passengerName" />
-        </div>
-        <div class="form-group">
             <button *ngIf="!condition"
-                    class="btn btn-default" [routerLink]="['/taxiorders']" (click)="createTaxiOrder(myForm)">Добавить</button>
+                    class="btn btn-default" [routerLink]="['/taxiorders']" (click)="createTaxiOrder(myForm)">Создать</button>
         </div>
         <p>
             <ng2-map zoom="2" >
@@ -53,7 +49,6 @@
                     lat: [[lat]], lng: [[lng]]
                 </info-window>
             </ng2-map>
-            place: {{address | json}}
         </p>     
 </form>
 
