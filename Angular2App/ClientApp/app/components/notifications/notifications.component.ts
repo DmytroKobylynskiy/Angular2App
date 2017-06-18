@@ -49,7 +49,7 @@ export class NotificationsComponent {
                 this.isUser = true;
                 let params: URLSearchParams = new URLSearchParams();
                 params.set('ownerId', this.authService.userProfile.user_id);
-                params.set('role','client');
+                params.set('role','customer');
                 this.http.get('api/notification/getnotificationsorder', {
                     search: params
                 }).subscribe(

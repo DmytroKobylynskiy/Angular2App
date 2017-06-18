@@ -18,5 +18,7 @@ namespace Angular2App.Models
         public string OfferOwnerId { get; set; }
         public string OfferOwnerEmail{get;set;}
         public string OfferStatus { get; set; }
+        public string BusyDate{get;set;}
+        public string BusyTime{get;set;}
     }
 }

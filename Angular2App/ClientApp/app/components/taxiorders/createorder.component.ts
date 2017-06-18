@@ -1,4 +1,4 @@
-import { Component, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { Http } from '@angular/http';
 import { HttpService} from '../services/http.service';
 import { MapsService} from '../services/maps.service';
@@ -29,8 +29,11 @@ export class CreateOrderComponent {
     public strEnd : string;
     public done : boolean ;
     public condition: boolean=false;
-    constructor(private auth : Auth1Service,private http: Http,private httpService: HttpService,private mapsService: MapsService,private ref: ChangeDetectorRef) {
-        
+    constructor(private auth : Auth1Service,
+                private http: Http,
+                private httpService: HttpService,
+                private mapsService: MapsService,
+                private cdr: ChangeDetectorRef) {
     }
     createTaxiOrder(form : NgForm){
         const body = JSON.stringify(this.taxiOrder);

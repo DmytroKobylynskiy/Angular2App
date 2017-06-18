@@ -18,12 +18,12 @@ import { myConfig } from "../auth.config";
 import { OffersService } from "../services/offers.service";
 @Component({
     selector: 'angular2app',
-    template: require('./taxiorders.component.html'),
+    template: require('./ordersToConrDriver.component.html'),
     providers: [HttpService,Auth1Service,NotificationService,OffersService],
     styles: [require('./taxiorders.component.css')]
 })
 
-export class TaxiOrdersComponent {
+export class OrdersToConrDriver {
     public taxiOrders: Observable<Array<TaxiOrder>>;
     public taxiOrdersId: Observable<Array<TaxiOrder>>;
     public taxiOrder : Observable<TaxiOrder>;
@@ -52,7 +52,11 @@ export class TaxiOrdersComponent {
     }
     ngOnInit() {
         if(this.auth.loggedIn()){
-            this.http.get('/api/order/taxiorders').subscribe(result => {
+            let params: URLSearchParams = new URLSearchParams();
+            params.set('userId', this.auth.getUserProfile().user_id);
+            this.http.get('/api/order/myrequests', {
+                search: params
+            }).subscribe(result => {
                 this.taxiOrders = result.json();
                 console.log(this.taxiOrders);
             });

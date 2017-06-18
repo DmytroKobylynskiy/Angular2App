@@ -30,6 +30,7 @@ import { Ng2OrderModule } from 'ng2-order-pipe';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import { ProfileComponent } from "./components/changerole/profile.component";
 import { ReactiveFormsModule } from '@angular/forms';
+import { OrdersToConrDriver} from './components/taxiorders/ordersToConrDriver.component';
 export function authHttpServiceFactory(http: Http, options: RequestOptions) {
   return new AuthHttp( new AuthConfig({}), http, options);
 }
@@ -63,7 +64,8 @@ const taxiOfferRoutes: Routes = [
         CreateOrderToDriverComponent,
         RequestsComponent,
         AdditionCalculateWindow,
-        ProfileComponent
+        ProfileComponent,
+        OrdersToConrDriver
     ],
     imports: [
         UniversalModule, // Must be first import. This automatically imports BrowserModule, HttpModule, and JsonpModule too.
@@ -90,6 +92,7 @@ const taxiOfferRoutes: Routes = [
             { path: 'offers', component : TaxiOffersComponent},
             { path: 'notifications', component : NotificationsComponent},
             { path: 'profile', component: ProfileComponent},
+            { path: 'myrequest', component: OrdersToConrDriver},
             { path: '**', redirectTo: 'home' }
         ]),
         Ng2MapModule.forRoot({apiUrl: 'https://maps.google.com/maps/api/js?sensor=true&libraries=places&key=AIzaSyBaiH4wZdZ3nlL9itqn6-D7-LOUsdGuyD4'})

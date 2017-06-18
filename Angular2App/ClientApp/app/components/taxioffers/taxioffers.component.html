@@ -33,7 +33,14 @@
                   <th> Действие </th>
             </tr>
             <tr *ngFor="let item of taxiOffers |filter:term | orderBy: order ; let i = index">
-                <td>{{item.place}}
+                <td *ngIf="item.busyDate" style="background:red">{{item.place}}
+                    <div *ngIf="item.condition">
+                        <b>Местоположение:</b> {{item.place}}<br>
+                        <b>Машина:</b>{{item.auto}}<br>
+                        <b>Електронная почта:</b>{{item.offerOwnerEmail}}<br><br>
+                    </div>
+                </td>
+                <td *ngIf="!item.busyDate">{{item.place}}
                     <div *ngIf="item.condition">
                         <b>Местоположение:</b> {{item.place}}<br>
                         <b>Машина:</b>{{item.auto}}<br>
@@ -64,8 +71,8 @@
                 <b>Цена:</b> [[price]], <b>Адрес:</b> [[place]]<br/>
             </info-window>
         </marker>
+        <traffic-layer></traffic-layer>
     </ng2-map>
-    
 </div>
 
 

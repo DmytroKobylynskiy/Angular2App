@@ -15,6 +15,7 @@ export class NotificationService{
         //this.role= this.authService.getUserProfile().user_metadata.role;
     }
     getNumNotifications(user_id:string){
+            console.log(this.authService.getUserProfile().user_metadata.role);
             let params: URLSearchParams = new URLSearchParams();
             params.set('ownerId', user_id);
             params.set('role',this.authService.getUserProfile().user_metadata.role);
@@ -26,7 +27,7 @@ export class NotificationService{
     }
 
     getNotifications=(user_id)=>{
-        
+            console.log(this.authService.getUserProfile().user_metadata.role);
             let params: URLSearchParams = new URLSearchParams();
             params.set('ownerId', user_id);
             params.set('role',this.authService.getUserProfile().user_metadata.role);

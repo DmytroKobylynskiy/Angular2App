@@ -28,7 +28,7 @@
                     </a>
                 </li>
                 <li [routerLinkActive]="['link-active']" *ngIf="authService.loggedIn()">
-                        <a [routerLink]="['/notifications']"><span class="glyphicon glyphicon-envelope"></span>Уведомления [{{notificationService.nsLength}}]
+                        <a [routerLink]="['/notifications']"><span class="glyphicon glyphicon-envelope"></span>Уведомления <span *ngIf="nsLength">[Новое!]</span>
                             <a (click)="getNumNotifications()">
                                 <span class=" glyphicon glyphicon-refresh" >
                                 </span> 

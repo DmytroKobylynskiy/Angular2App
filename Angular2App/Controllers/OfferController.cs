@@ -36,40 +36,6 @@ namespace Angular2App.Controllers
                      _offers[i].Place = offers[i].Place.Remove(0, offers[i].Place.IndexOf('|')+1);
                 }
             }
-            /*
-            SortState.SortingState sortOrder = SortState.SortingState.StartPointAsc;
-            ViewData["StartPointSort"] = sortOrder == SortState.SortingState.StartPointAsc ? SortState.SortingState.StartPointDesc : SortState.SortingState.StartPointAsc;
-            ViewData["EndPointSort"] = sortOrder == SortState.SortingState.EndPointAsc ? SortState.SortingState.EndPointDesc : SortState.SortingState.EndPointAsc;
-            ViewData["DateSort"] = sortOrder == SortState.SortingState.DateAsc ? SortState.SortingState.DateDesc : SortState.SortingState.DateAsc;
-            ViewData["StatusSort"] = sortOrder == SortState.SortingState.StatusOrderAsc ? SortState.SortingState.StatusOrderDesc : SortState.SortingState.StatusOrderAsc;
-
-            switch (sortOrder)
-            {
-                case SortState.SortingState.StartPointDesc:
-                    taxi = taxi.OrderByDescending(s => s.StartPoint).ToList();
-                    break;
-                case SortState.SortingState.EndPointAsc:
-                    taxi = taxi.OrderBy(s => s.EndPoint).ToList();
-                    break;
-                case SortState.SortingState.EndPointDesc:
-                    taxi = taxi.OrderByDescending(s => s.EndPoint).ToList();
-                    break;
-                case SortState.SortingState.DateAsc:
-                    taxi = taxi.OrderBy(s => s.Date).ToList();
-                    break;
-                case SortState.SortingState.DateDesc:
-                    taxi = taxi.OrderByDescending(s => s.Date).ToList();
-                    break;
-                case SortState.SortingState.StatusOrderAsc:
-                    taxi = taxi.OrderBy(s => s.OrderStatus).ToList();
-                    break;
-                case SortState.SortingState.StatusOrderDesc:
-                    taxi = taxi.OrderByDescending(s => s.OrderStatus).ToList();
-                    break;
-                default:
-                    taxi = taxi.OrderBy(s => s.StartPoint).ToList();
-                    break;
-            }*/
             return Json(_offers);
         }
 
@@ -138,17 +104,6 @@ namespace Angular2App.Controllers
             }
             return Json(taxi);
         }
-        /*
-        public async Task<IActionResult> DeleteTaxiOffer(int id)
-        {
-            if (id != null)
-            {
-                TaxiOffer taxiOffer = await db.TaxiOffers.FirstOrDefaultAsync(p => p.Id == id);
-                if (taxiOffer != null)
-                    return View(taxiOffer);
-            }
-            return NotFound();
-        }*/
 
         [HttpGet("[action]")]
         [HttpGet("{offerId}")]
@@ -178,19 +133,6 @@ namespace Angular2App.Controllers
             }
             return Json(taxi,new JsonSerializerSettings{ContractResolver = new CamelCasePropertyNamesContractResolver() });
         }
-/*
-        public async Task<IActionResult> DetailsTaxiOffer(int? id)
-        {
-            if (id != null)
-            {
-                TaxiOffer taxiOffer = await db.TaxiOffers.FirstOrDefaultAsync(p => p.Id == id);
-                if (taxiOffer != null)
-                    return View(taxiOffer);
-            }
-            return NotFound();
-        }
-*/
-
 
         [HttpGet("[action]")]
         [HttpGet("{receiverId}")]
@@ -229,47 +171,49 @@ namespace Angular2App.Controllers
         }
 
         [HttpPost("[action]")]
-        public async Task<IActionResult> EditTaxiOffer([FromBody]TaxiOrder taxiOfferNew)
+        public async Task<IActionResult> EditTaxiOffer([FromBody]TaxiOffer taxiOfferNew)
         {
             //TaxiOrder taxiOrder = await db.TaxiOrders.FirstOrDefaultAsync(p => p.Id == taxiOrderNew.Id);
             //taxiOrder = taxiOrderNew;
-            db.TaxiOrders.Update(taxiOfferNew);
+            db.Offers.Update(taxiOfferNew);
             
             await db.SaveChangesAsync();
-            return Json(taxiOfferNew.StartPoint,new JsonSerializerSettings {
+            return Json(taxiOfferNew,new JsonSerializerSettings {
                     ContractResolver = new CamelCasePropertyNamesContractResolver()
             });
         }
 
-   /*     
-        public async Task<IActionResult> AgreeTaxiOffer(int? id)
+        [HttpGet("[action]")]
+        [HttpGet("{editedTaxiOfferId}")]
+        [HttpGet("{date}")]
+        [HttpGet("{time}")]
+        public async Task<IActionResult> BusyTaxiOffer(string editedTaxiOfferId,string date, string time)
         {
-            if (id != null)
+            List<TaxiOffer> taxi = new List<TaxiOffer>();
+            if (editedTaxiOfferId != null)
             {
-                TaxiOffer taxiOffer = await db.TaxiOffers.FirstOrDefaultAsync(p => p.Id == id);
-                if (taxiOffer != null)
-                {
-                    taxiOffer.OfferStatus = "In progress";
-                    db.TaxiOffers.Update(taxiOffer);
+                using(db){
+                    var taxis = from n in db.Offers
+                                        where n.OfferOwnerId==editedTaxiOfferId
+                                        select n;
+                    foreach (var notification in taxis)
+                    {
+                            taxi.Add(notification);
+                    }
+                    foreach(var item in taxi){
+                        item.BusyDate = date;
+                        item.BusyTime = time;
+                        db.Offers.Update(item);
+                    }
                     await db.SaveChangesAsync();
-                    return View(taxiOffer);
+                    return Json(taxi,new JsonSerializerSettings
+                    {
+                        ContractResolver = new CamelCasePropertyNamesContractResolver()
+                    });
                 }
             }
             return NotFound();
         }
 
-        
-        [HttpGet]
-        [ActionName("Delete")]
-        public async Task<IActionResult> ConfirmDeleteTaxiOffer(int? id)
-        {
-            if (id != null)
-            {
-                TaxiOffer taxiOffer = await db.TaxiOffers.FirstOrDefaultAsync(p => p.Id == id);
-                if (taxiOffer != null)
-                    return View(taxiOffer);
-            }
-            return NotFound();
-        }*/
     }
 }

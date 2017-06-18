@@ -14,14 +14,21 @@ import { NotificationService } from "../services/notification.service";
 export class NavMenuComponent {
 
     private userRole : string;
-    private nsLength : number;
+    private nsLength : boolean;
     public loggedIn : boolean;
     public done : boolean;
     public notifications : Array<NotificationOrder>; 
     constructor(private notificationService: NotificationService,private http: Http,private httpService: HttpService,private authService: Auth1Service) {
-        if(this.authService.loggedIn())
-         this.notificationService.getNumNotifications(this.authService.userProfile.user_id).subscribe((data) => {this.nsLength=data;}
-         );
+        if(this.authService.loggedIn()){
+            this.notificationService.getNumNotifications(this.authService.userProfile.user_id).subscribe((data) => 
+            {
+                this.nsLength=data;
+                if(this.notificationService.nsLength>0){
+                    this.nsLength=true;
+                }
+            });
+        }
+         
     }
 
 
@@ -32,7 +39,7 @@ export class NavMenuComponent {
     getNumNotifications(){
         this.notificationService.getNumNotifications(this.authService.userProfile.user_id);
         console.log(this.notificationService.nsLength);
-        this.nsLength = this.notificationService.nsLength;
+        
     }
 
     login(){

@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-// For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+
 
 namespace Angular2App.Controllers
 {
@@ -39,7 +39,7 @@ namespace Angular2App.Controllers
             List<TaxiOrder> taxi = new List<TaxiOrder>();
             using(db){
                     var taxis = from n in db.TaxiOrders
-                                        where n.OrderStatus=="Free"
+                                        where n.OrderStatus=="Free" && n.ReceiverId == null
                                         select n;
                     foreach (var notification in taxis)
                     {
@@ -97,23 +97,6 @@ namespace Angular2App.Controllers
             }
             return Json(taxi);
         }
-/* 
-        public async Task<IActionResult> MyRequests()
-        {
-            var user = await GetCurrentUserAsync();
-            var userId = user.Id;
-            List<TaxiOrder> allOrders = await db.TaxiOrders.ToListAsync();
-            List<TaxiOrder> myRequest = new List<TaxiOrder>();
-            foreach (var order in allOrders)
-            {
-                if (order.ReceiverId == userId)
-                {
-                    myRequest.Add(order);
-                }
-            }
-            return View(myRequest);
-        }
-*/
 
         [HttpPost("[action]")]
         public async Task<IActionResult> CreateTaxiOrder([FromBody]TaxiOrder taxiOrder)
@@ -129,10 +112,10 @@ namespace Angular2App.Controllers
                 db.TaxiOrders.Add(taxiOrder);
                await db.SaveChangesAsync();
            }else{
-               taxiOrder.OrderStatus = "In progress";
+               taxiOrder.OrderStatus = "Free";
                taxiOrder.Id=allOrders[allOrders.Count-1].Id+1;
                db.TaxiOrders.Add(taxiOrder);
-               await CreateNotification(taxiOrder);
+               //await CreateNotification(taxiOrder);
                //await SendEmail(taxiOrder.Id,false);
                await db.SaveChangesAsync();
            }
@@ -141,29 +124,7 @@ namespace Angular2App.Controllers
                     ContractResolver = new CamelCasePropertyNamesContractResolver()
                 });
         }
-/*
-        public async Task<IActionResult> CreateTaxiOrderToConcreateDriver(string receiverId)
-        {
-            TaxiOrder taxiOrder = new TaxiOrder();
-           // taxiOrder.ReceiverId = receiverId;
-            //db.TaxiOrders.Add(taxiOrder);
-           // await db.SaveChangesAsync();
-            return View(taxiOrder);
-        }
 
-        [HttpPost]
-        public async Task<IActionResult> CreateTaxiOrderToConcreateDriver(string receiverId,TaxiOrder taxiOrder)
-        {
-
-            var user = await GetCurrentUserAsync();
-            var userId = user?.Id;
-            //taxiOrder.OrderOwnerId = userId;
-            taxiOrder.OrderStatus = "In Progress";
-            db.TaxiOrders.Add(taxiOrder);
-            await db.SaveChangesAsync();
-            return RedirectToAction("TaxiOrders");
-        }
-*/
         [HttpGet("[action]")]
         [HttpGet("{id}")]
         public async Task<IActionResult> EditTaxiOrder(int? id)
@@ -384,24 +345,40 @@ namespace Angular2App.Controllers
                         ContractResolver = new CamelCasePropertyNamesContractResolver()
                     });
         }
-/*
-        public async Task<IActionResult> ConfirmTaxiOrder(int? id)
-        {
-            TaxiOrder taxiOrder = await db.TaxiOrders.FirstOrDefaultAsync(p => p.Id == id);
-            return View(taxiOrder);
-        }
 
-        [HttpGet]
-        [ActionName("Delete")]
-        public async Task<IActionResult> ConfirmDeleteTaxiOrder(int? id)
-        {
-            if (id != null)
+        [HttpGet("[action]")]
+        [HttpGet("{userId}")]
+        public async Task<IActionResult> MyRequests(string userId)
+        {   
+            
+            if (userId != null)
             {
-                TaxiOrder taxiOrder = await db.TaxiOrders.FirstOrDefaultAsync(p => p.Id == id);
-                if (taxiOrder != null)
-                    return View(taxiOrder);
+                List<TaxiOrder> orders = new List<TaxiOrder>() ; 
+                using(db){
+                    var taxiorders = from t in db.TaxiOrders
+                                        where t.ReceiverId == userId&&t.OrderStatus == "In Progress"
+                                        select t;
+                    foreach (var item in taxiorders)
+                    {
+                            orders.Add(item);
+                    }
+                    for (int i = 0; i < orders.Count; i++)
+                    {
+                        if(orders[i].StartPoint.IndexOf('|')>0){
+                            orders[i].StartPoint = orders[i].StartPoint.Remove(0, orders[i].StartPoint.IndexOf('|')+1);
+                        }
+                        if(orders[i].EndPoint.IndexOf('|')>0){
+                            orders[i].EndPoint = orders[i].EndPoint.Remove(0, orders[i].EndPoint.IndexOf('|')+1);
+                        }
+                    }
+                    return Json(orders,new JsonSerializerSettings
+                            {
+                                ContractResolver = new CamelCasePropertyNamesContractResolver()
+                            });
+                }
             }
             return NotFound();
-        }*/
+        }
+
     }
 }

@@ -42,7 +42,7 @@ namespace Angular2App.Controllers
                         {
                             ns.Add(notification);
                         }
-                    }else if(role=="client"){
+                    }else if(role=="customer"){
                         var notifications = from n in db.NotificationsOrder
                                         where (n.OrderOwnerId == ownerId || n.ReceiverId == ownerId)&&n.NotificationStatusClient=="Free"
                                         select n;
@@ -79,7 +79,7 @@ namespace Angular2App.Controllers
                         {
                             ns.Add(notification);
                         }
-                    }else if(role=="client"){
+                    }else if(role=="customer"){
                         var notifications = from n in db.NotificationsOrder
                                         where (n.OrderOwnerId == ownerId || n.ReceiverId == ownerId)&&n.NotificationStatusClient=="Free"
                                         select n;

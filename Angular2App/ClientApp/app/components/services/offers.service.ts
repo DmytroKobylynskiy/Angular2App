@@ -25,6 +25,19 @@ export class OffersService{
         );
     }
 
+    busyOffer(id, date:string, time:string){
+        let params: URLSearchParams = new URLSearchParams();
+        params.set('editedTaxiOfferId', id);
+        params.set('date', date);
+        params.set('time', time);
+        this.http.get('api/offer/BusyTaxiOffer', {
+                search: params
+            }).subscribe(
+            (response) => {this.taxiOffers = response.json();this.done=true}, 
+            (error) => console.log("error")
+        );
+    }
+
     offers(){
         return this.http.get('/api/offer/offers').map(response => {this.taxiOffers = response.json() })
                         .catch((error:any) =>{return Observable.throw(error);});

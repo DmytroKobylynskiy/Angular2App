@@ -7,7 +7,8 @@
             <input places-auto-complete
         (initialized$)="mapsService.initialized($event)"
         (place_changed)="mapsService.placeChanged($event)"
-        [types]="['geocode']" type="text" class="form-control" name="startPoint" [(ngModel)]="startPoint"/>
+        [types]="['geocode']" type="text" class="form-control" name="startPoint" [(ngModel)]="startPoint"
+        />
     
     <button *ngIf="!condition" class="btn btn-default" (click)="mapsService.requestPosition()">Местоположение</button>
         </div>
@@ -16,7 +17,7 @@
             <input places-auto-complete
                 (initialized$)="mapsService.initialized($event)"
                 (place_changed)="mapsService.endPlaceChanged($event)"
-                [types]="['geocode']" type="text" class="form-control" name="endPoint" [(ngModel)]="endPoint" />
+                [types]="['geocode']" type="text" class="form-control" name="endPoint" [(ngModel)]="endPoint" (ngModelChange)="showDirection(myForm)"/>
         </div>
         <div class="form-group">
             <label>Дата</label>
